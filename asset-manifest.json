@@ -1,13 +1,13 @@
 {
-  "main.css": "/static/css/main.b2789f4d.chunk.css",
-  "main.js": "/static/js/main.823e1121.chunk.js",
-  "main.js.map": "/static/js/main.823e1121.chunk.js.map",
-  "static/js/1.349d4559.chunk.js": "/static/js/1.349d4559.chunk.js",
-  "static/js/1.349d4559.chunk.js.map": "/static/js/1.349d4559.chunk.js.map",
-  "runtime~main.js": "/static/js/runtime~main.229c360f.js",
-  "runtime~main.js.map": "/static/js/runtime~main.229c360f.js.map",
-  "static/css/main.b2789f4d.chunk.css.map": "/static/css/main.b2789f4d.chunk.css.map",
-  "index.html": "/index.html",
-  "precache-manifest.0e8b5be9b1d0e48fd3d1f7013ae4f8ca.js": "/precache-manifest.0e8b5be9b1d0e48fd3d1f7013ae4f8ca.js",
-  "service-worker.js": "/service-worker.js"
+  "main.css": "/gamesTables/static/css/main.b2789f4d.chunk.css",
+  "main.js": "/gamesTables/static/js/main.b09cc4da.chunk.js",
+  "main.js.map": "/gamesTables/static/js/main.b09cc4da.chunk.js.map",
+  "static/js/1.349d4559.chunk.js": "/gamesTables/static/js/1.349d4559.chunk.js",
+  "static/js/1.349d4559.chunk.js.map": "/gamesTables/static/js/1.349d4559.chunk.js.map",
+  "runtime~main.js": "/gamesTables/static/js/runtime~main.191c2da6.js",
+  "runtime~main.js.map": "/gamesTables/static/js/runtime~main.191c2da6.js.map",
+  "static/css/main.b2789f4d.chunk.css.map": "/gamesTables/static/css/main.b2789f4d.chunk.css.map",
+  "index.html": "/gamesTables/index.html",
+  "precache-manifest.9fdbc6e4dca0dfa886f1e6caceb287fc.js": "/gamesTables/precache-manifest.9fdbc6e4dca0dfa886f1e6caceb287fc.js",
+  "service-worker.js": "/gamesTables/service-worker.js"
 }
