@@ -2,7 +2,7 @@
   "name": "gamestables",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://katerinati.61hub.com/gamesTables",
+  "homepage": "https://katerinati.61hub.com",
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.6.3",
