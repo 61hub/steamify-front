@@ -12,10 +12,17 @@ class App extends Component {
 
 
   render() {
-    const key = "2D7A611545098E1FC165D53E16F03065";
-    const id = "76561198080321262";
-    axios.get(`http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=${key}&include_appinfo=1&steamid=${id}&format=json`)
-      .then(response =>  response.data.response.games ? this.setState({games: response.data.response.games}) : null);
+    // const key = "2D7A611545098E1FC165D53E16F03065";
+    // const id = "76561198080321262";
+    axios.get(`http://157.230.56.14:3000/GetOwnedGames`)
+      .then(response => response.data.games ? this.setState({games: response.data.games}) : null);
+
+    const mappedId = this.state.games.map((el) => el.appid);
+    const joinedId = mappedId.join();
+
+
+    // axios.get(`https://store.steampowered.com/api/appdetails/?appids=${joinedId}&cc=us&filters=price_overview`)
+    //   .then(response => console.log(response) );
     return (
      <div>
         <table>
@@ -27,12 +34,12 @@ class App extends Component {
           </thead>
           <tbody>
           <tr>
-            {this.state.games.map((el) =>
+            {this.state.games.sort((a,b) => (b.playtime_forever - a.playtime_forever)).map((el) =>
               <tr>
                <td> <img src={"http://media.steampowered.com/steamcommunity/public/images/apps/"
                + el.appid + "/" + el.img_icon_url + ".jpg"}></img></td>
                 <td>{el.name}</td>
-                <td>{Math.round(el.playtime_forever /60) }</td>
+                <td>{Math.round(el.playtime_forever / 60)}</td>
               </tr> )}
           </tr>
           </tbody>
@@ -44,3 +51,4 @@ class App extends Component {
 }
 
 export default App;
+
