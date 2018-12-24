@@ -24,24 +24,24 @@ class App extends Component {
     // axios.get(`https://store.steampowered.com/api/appdetails/?appids=${joinedId}&cc=us&filters=price_overview`)
     //   .then(response => console.log(response) );
     return (
-     <div>
+     <div className="container">
         <table>
           <thead>
           <tr>
-            <th>Game's name</th>
+            <th colSpan='3'>Game's name</th>
             <th>Game play duration</th>
           </tr>
           </thead>
           <tbody>
-          <tr>
-            {this.state.games.sort((a,b) => (b.playtime_forever - a.playtime_forever)).map((el) =>
+            {this.state.games.sort((a,b) => (b.playtime_forever - a.playtime_forever)).map((el, index) =>
               <tr>
-               <td> <img src={"http://media.steampowered.com/steamcommunity/public/images/apps/"
+                <td>{index + 1}</td>
+               <td>
+                 <img src={"http://media.steampowered.com/steamcommunity/public/images/apps/"
                + el.appid + "/" + el.img_icon_url + ".jpg"}></img></td>
                 <td>{el.name}</td>
                 <td>{Math.round(el.playtime_forever / 60)}</td>
               </tr> )}
-          </tr>
           </tbody>
         </table>
      </div>
