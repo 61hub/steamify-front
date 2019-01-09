@@ -30,3 +30,28 @@
     transform: rotate(360deg);
   }
 }
+body {
+  background-image: url("./icons/background-image.jpg");
+  height: 100%;
+  background-attachment: fixed;
+  font-family: Lato, sans-serif;
+}
+.overlay {
+  background-color: #1b2031 ;
+  opacity: 0.5;
+}
+
+th {
+  color: rgb(224, 225, 226);
+  font-weight: 900;
+  font-size: 18px;
+}
+td {
+  color: rgb(199, 199, 199);
+}
+table {
+  margin: 0 auto;
+}
+.gameDuration {
+  font-weight: 600;
+}
