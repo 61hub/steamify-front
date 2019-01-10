@@ -8,29 +8,16 @@ class App extends Component {
     this.state = {
       games: []
     };
-    this.handleScroll = this.handleScroll.bind(this);
 }
 
-  handleScroll = () => {
-    window.scrollTo({
-      top: 1000,
-      behavior: "smooth"
-    })
-  };
+  componentDidMount() {
+    axios.get(`http://157.230.56.14:3000/api/v1/games`)
+      .then(response => response.data ? this.setState({games: response.data}) : null);
+  }
 
   render() {
-
-    axios.get(`http://157.230.56.14:3000/GetOwnedGames`)
-      .then(response => response.data.games ? this.setState({games: response.data.games}) : null);
-
-    const mappedId = this.state.games.map((el) => el.appid);
-    const joinedId = mappedId.join();
-
-    // axios.get(`https://store.steampowered.com/api/appdetails/?appids=${joinedId}&cc=us&filters=price_overview`)
-    //   .then(response => console.log(response) );
-
     return (
-     <div className="container" onClick={this.handleScroll}>
+     <div className="container">
        <div className="overlay">
         <table>
           <thead>
@@ -40,14 +27,14 @@ class App extends Component {
           </tr>
           </thead>
           <tbody>
-            {this.state.games.sort((a,b) => (b.playtime_forever - a.playtime_forever)).map((el, index) =>
+            {this.state.games.sort((a,b) => (b.playtimeForever - a.playtimeForever)).map((el, index) =>
               <tr>
                 <td>{index + 1}</td>
                <td>
-                 <img src={"http://media.steampowered.com/steamcommunity/public/images/apps/"
-               + el.appid + "/" + el.img_icon_url + ".jpg"}></img></td>
+                 <img src={el.icon}></img>
+               </td>
                 <td>{el.name}</td>
-                <td className="gameDuration">{Math.round(el.playtime_forever / 60)}</td>
+                <td className="gameDuration">{el.playtimeForeverReadable}</td>
               </tr> )}
           </tbody>
         </table>
