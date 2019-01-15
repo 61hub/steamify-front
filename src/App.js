@@ -6,24 +6,45 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      games: []
+      games: [],
+      value: "",
+      className: ""
     };
+    this.handleInputSubmit = this.handleInputSubmit.bind(this);
 }
 
   componentDidMount() {
     axios.get(`http://157.230.56.14:3000/api/v1/games`)
-      .then(response => response.data ? this.setState({games: response.data}) : null);
+      .then(response =>  response.data ? this.setState({games: response.data}) : null);
+  }
+  handleInputSubmit(event, appid) {
+    console.log(event.keyCode);
+    if(event.keyCode == 13) {
+      this.saveData(appid);
+    } else {
+      this.setState({value: event.target.value});
+      console.log(event.target.value)
+    }
+  }
+
+  saveData(appid) {
+    this.setState({className: "loading"});
+    axios.patch(`http://157.230.56.14:3000/api/v1/games/${appid}`, {price: this.state.value})
+      .then(response => this.setState({className: "success"}))
+      .catch(response =>  this.setState({className: "error"}));
   }
 
   render() {
     return (
      <div className="container">
        <div className="overlay">
+         <div className={`loadingState ${this.state.className}`}></div>
         <table>
           <thead>
           <tr>
             <th colSpan='3'>Game's name</th>
-            <th>Game play duration</th>
+            <th colSpan="2">Game play duration</th>
+            <th colSpan='1'>Price</th>
           </tr>
           </thead>
           <tbody>
@@ -34,7 +55,10 @@ class App extends Component {
                  <img src={el.icon}></img>
                </td>
                 <td>{el.name}</td>
-                <td className="gameDuration">{el.playtimeForeverReadable}</td>
+                <td colSpan="2" className="gameDuration">{el.playtimeForeverReadable}</td>
+                 <td>
+                   <input className="priceInput" defaultValue={el.price} type="text" onBlur={() => this.saveData(el.appId)} onKeyUp={(event) => this.handleInputSubmit(event, el.appId)}/>
+                 </td>
               </tr> )}
           </tbody>
         </table>
