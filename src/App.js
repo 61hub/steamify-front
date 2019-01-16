@@ -11,6 +11,7 @@ class App extends Component {
       className: ""
     };
     this.handleInputSubmit = this.handleInputSubmit.bind(this);
+    this.handlePriceHour = this.handlePriceHour.bind(this);
 }
 
   componentDidMount() {
@@ -26,7 +27,14 @@ class App extends Component {
       console.log(event.target.value)
     }
   }
-
+  handlePriceHour(price, playtime) {
+    let priceHour = Number(price /playtime).toFixed(1);
+    if(priceHour == 0.0) {
+      const roundedPrice = Math.round(priceHour);
+      return roundedPrice
+    }
+    return priceHour
+  }
   saveData(appid) {
     this.setState({className: "loading"});
     axios.patch(`http://157.230.56.14:3000/api/v1/games/${appid}`, {price: this.state.value})
@@ -59,6 +67,7 @@ class App extends Component {
                  <td>
                    <input className="priceInput" defaultValue={el.price} type="text" onBlur={() => this.saveData(el.appId)} onKeyUp={(event) => this.handleInputSubmit(event, el.appId)}/>
                  </td>
+                <td>{this.handlePriceHour(el.price, el.playtimeForever)}</td>
               </tr> )}
           </tbody>
         </table>
