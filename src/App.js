@@ -28,7 +28,8 @@ class App extends Component {
     }
   }
   handlePriceHour(price, playtime) {
-    let priceHour = Number(price /playtime).toFixed(1);
+    let playTimeInHours = playtime / 60;
+    let priceHour = Number(price /playTimeInHours).toFixed(1);
     if(priceHour == 0.0) {
       const roundedPrice = Math.round(priceHour);
       return roundedPrice
