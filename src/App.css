@@ -50,3 +50,26 @@ table {
 .loadingState.success {
   background-color: green;
 }
+.gameHourPrice {
+  height: 8px;
+  border-radius: 50%;
+  width: 8px;
+  overflow: hidden;
+}
+.gameHourPrice.darkGreen {
+  background-color: darkgreen;
+}
+.gameHourPrice.green {
+  background-color: darkseagreen;
+}
+.gameHourPrice.orange {
+  background-color: orange;
+}
+.gameHourPrice.red {
+  background-color: red;
+}
+.gameHourPrice.yellow {
+  background-color: yellow;
+}
+.gameHourPriceWrapper {
+}
