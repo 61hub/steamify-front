@@ -34,6 +34,7 @@ class Game extends Component {
       return "red"
     }
   };
+
   render() {
     return (
       <tr>
@@ -45,7 +46,7 @@ class Game extends Component {
           <img src={this.props.data.icon}></img>
         </td>
         <td>{this.props.data.name}</td>
-        <td colSpan="2" className="gameDuration">{this.props.data.playtimeForeverReadable}</td>
+        <td colSpan="2" className="gameDuration">{this.props.data.playtimeForeverReadable.replace(" days","d").replace(" hours", "h").replace(" minutes", "m")}</td>
         <td>
           <input className="priceInput" defaultValue={this.props.data.price} type="number" 
                  onBlur={() => this.props.saveData(this.props.data.appId, this.state.value)}
