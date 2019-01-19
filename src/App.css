@@ -4,6 +4,10 @@ body {
   height: 100%;
   background-attachment: fixed;
   font-family: Lato, sans-serif;
+  color: white;
+}
+input {
+  color: white;
 }
 .overlay {
   background-color: #1b2031 ;
@@ -11,12 +15,10 @@ body {
 }
 
 th {
-  color: rgb(224, 225, 226);
   font-weight: 900;
   font-size: 18px;
 }
 td {
-  color: rgb(199, 199, 199);
 }
 table {
   margin: 0 auto;
@@ -28,7 +30,6 @@ table {
   background: transparent;
   border: none;
   outline: none;
-  color: rgb(224, 225, 226);
   font-size: 18px;
 }
 .loadingState {
