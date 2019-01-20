@@ -35,14 +35,14 @@ class App extends Component {
 
   saveData = (appid, value) => {
     this.setState({serverStatus: "loading"});
-    axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {price: value})
+    axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {price: parseInt(value)})
       .then(response => this.setState({serverStatus: "success"}))
       .catch(response => this.setState({serverStatus: "error"}));
     const clonedGames = [...this.state.games];
     const elementToUpdatePrice = clonedGames.find((element) => element.appId == appid);
     const indexElToUpdatePrice = clonedGames.findIndex((element) => element.appId == appid);
     const updated = {...elementToUpdatePrice};
-    updated.price = value;
+    updated.price = parseInt(value);
     clonedGames[indexElToUpdatePrice] = updated;
     this.setState({games: clonedGames});
   }
