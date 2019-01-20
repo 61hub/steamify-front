@@ -5,7 +5,7 @@ export const countPriceHour = (el) => {
     return priceHour
   } else {
     let playTimeInHours = el.playtimeForever / 60;
-    priceHour = Number(el.price / playTimeInHours).toFixed(1);
+    priceHour = Math.round(el.price / playTimeInHours);
     return priceHour
   }
 };

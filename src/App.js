@@ -3,6 +3,7 @@ import './App.css';
 import axios from 'axios'
 import Game from "./Game"
 import {countPriceHour} from "./helpers"
+import * as _ from "lodash"
 
 class App extends Component {
   constructor(props) {
@@ -11,18 +12,28 @@ class App extends Component {
       games: [],
       serverStatus: "",
       gamePriceStatus: "",
-      sortedBy: ""
+      sortedBy: "pricePerHour",
+      sortOrder: "asc"
     };
   }
 
   componentDidMount() {
     axios.get(`http://157.230.56.14:3000/api/v1/games`)
-      .then(response => response.data ? this.setState({games: response.data}) : null);
+      .then(response => {
+        const mappedData = response.data.map((el) => {
+          if (isNaN(parseInt(el.price))) {
+            el.price = 0
+          } else {
+            el.price = parseInt(el.price)
+          }
+          const pricePerHour = countPriceHour(el);
+          el.pricePerHour = pricePerHour
+          return el
+        })
+        this.setState({games: mappedData})})
   }
 
-
   saveData = (appid, value) => {
-    console.log(this.inputRef);
     this.setState({serverStatus: "loading"});
     axios.patch(`http://157.230.56.14:3000/api/v1/games/${appid}`, {price: value})
       .then(response => this.setState({serverStatus: "success"}))
@@ -39,7 +50,9 @@ class App extends Component {
     console.log(type);
     this.setState({sortedBy: type})
   };
-
+  handleSortOrder = (type) => {
+    this.setState({sortOrder: type})
+  }
   render() {
     return (
       <div className="container">
@@ -49,8 +62,9 @@ class App extends Component {
             Sort by:
             <div><input type="radio" name="sort" onChange={() => this.handleSortClick("price")}/>Price</div>
             <div><input type="radio" name="sort" onChange={() => this.handleSortClick("playtimeForever")}/>Hours</div>
-            <div><input type="radio" name="sort" onChange={() => this.handleSortClick("pricePerHour")}/>Price per hour
-            </div>
+            <div><input type="radio" name="sort" onChange={() => this.handleSortClick("pricePerHour")}/>Price per hour</div>
+            <div><input type="radio" name="order" onChange={() => this.handleSortOrder("asc")}/>Asc</div>
+            <div><input type="radio" name="order" onChange={() => this.handleSortOrder("desc")}/>Desc</div>
           </div>
           <table>
             <thead>
@@ -61,24 +75,7 @@ class App extends Component {
             </tr>
             </thead>
             <tbody>
-            {this.state.games.sort((a, b) => {
-
-              if (this.state.sortedBy == "playtimeForever") {
-
-                return b[this.state.sortedBy] - a[this.state.sortedBy]
-              } else if (this.state.sortedBy == "price") {
-                if (isNaN(parseInt(b.price))) {
-                  return -1
-                }
-                console.log(b[this.state.sortedBy] - a[this.state.sortedBy]);
-                return b[this.state.sortedBy] - a[this.state.sortedBy]
-              } else {
-                if (isNaN(parseInt(b.price))) {
-                  return -1
-                }
-                return countPriceHour(a) - countPriceHour(b)
-              }
-            })
+            {_.orderBy(this.state.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
               .map((el, index) =>
                 <Game key={el.appId} data={el} index={index} saveData={this.saveData}/>
               )}

@@ -21,7 +21,6 @@ class Game extends Component {
 
   definePriceHourClassName = (el) => {
     let priceHour = countPriceHour(el);
-
     if(priceHour <= 10) {
       return "darkGreen"
     } else if(priceHour <=50) {
