@@ -18,7 +18,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get(`http://157.230.56.14:3000/api/v1/games`)
+    axios.get(`http://steamify-api.61hub.com/v1/games`)
       .then(response => {
         const mappedData = response.data.map((el) => {
           if (isNaN(parseInt(el.price))) {
@@ -35,7 +35,7 @@ class App extends Component {
 
   saveData = (appid, value) => {
     this.setState({serverStatus: "loading"});
-    axios.patch(`http://157.230.56.14:3000/api/v1/games/${appid}`, {price: value})
+    axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {price: value})
       .then(response => this.setState({serverStatus: "success"}))
       .catch(response => this.setState({serverStatus: "error"}));
     const clonedGames = [...this.state.games];
