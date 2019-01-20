@@ -2,7 +2,7 @@
   "name": "gamestables",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://katerinati.61hub.com",
+  "homepage": "http://steam.61hub.com",
   "dependencies": {
     "axios": "^0.18.0",
     "lodash": "^4.17.11",
