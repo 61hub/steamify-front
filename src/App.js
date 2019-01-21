@@ -13,13 +13,14 @@ class App extends Component {
       serverStatus: "",
       gamePriceStatus: "",
       sortedBy: "pricePerHour",
-      sortOrder: "asc"
+      sortOrder: "asc",
     };
   }
 
   componentDidMount() {
     axios.get(`http://steamify-api.61hub.com/v1/games`)
       .then(response => {
+
         const mappedData = response.data.map((el) => {
           if (isNaN(parseInt(el.price))) {
             el.price = 0
@@ -29,8 +30,10 @@ class App extends Component {
           const pricePerHour = countPriceHour(el);
           el.pricePerHour = pricePerHour
           return el
-        })
-        this.setState({games: mappedData})})
+        }).filter((el) => el.hidden == false )
+        this.setState({games: mappedData})
+
+      })
   }
 
   saveData = (appid, value) => {
@@ -54,6 +57,13 @@ class App extends Component {
     this.setState({sortOrder: type})
   }
   render() {
+    let price = 0;
+    let playtimeForever = 0;
+     this.state.games.forEach((el) => {
+      price = price + el.price;
+      playtimeForever = playtimeForever + el.playtimeForever;
+
+    });
     return (
       <div className="container">
         <div className="overlay">
@@ -66,10 +76,12 @@ class App extends Component {
             <div><input type="radio" name="order" onChange={() => this.handleSortOrder("asc")}/>Asc</div>
             <div><input type="radio" name="order" onChange={() => this.handleSortOrder("desc")}/>Desc</div>
           </div>
+          <div>{`Total price: ${price}`}</div>
+          <div>{`Total playtime: ${Math.round(playtimeForever / 60 / 24)}`}</div>
           <table>
             <thead>
             <tr>
-              <th colSpan='3'>Game's name</th>
+              <th colSpan='4'>Game's name</th>
               <th colSpan="2">Game play duration</th>
               <th colSpan='1'>Price</th>
             </tr>

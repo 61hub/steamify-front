@@ -25,12 +25,14 @@ table {
 }
 .gameDuration {
   font-weight: 600;
+  text-align: center;
 }
 .priceInput {
   background: transparent;
   border: none;
   outline: none;
   font-size: 18px;
+  text-align: center;
 }
 .loadingState {
   height: 20px;
@@ -73,4 +75,7 @@ table {
   background-color: yellow;
 }
 .gameHourPriceWrapper {
+}
+.gameWrapper.hidden {
+  display: none;
 }

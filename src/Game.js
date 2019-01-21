@@ -1,12 +1,14 @@
 import React, {Component} from "react"
 import {countPriceHour} from "./helpers"
+import axios from 'axios'
 
 
 class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ""
+      value: "",
+      hidden: props.data.hidden
     }
   }
 
@@ -34,9 +36,16 @@ class Game extends Component {
     }
   };
 
+  hideGame = (appId) => {
+    console.log(appId);
+    this.setState({gameClassName: "hide", hidden: true}, () => {
+      axios.patch(`http://steamify-api.61hub.com/v1/games/${appId}`, {hidden: this.state.hidden});
+    });
+
+  };
   render() {
     return (
-      <tr>
+      <tr className={`gameWrapper ${this.state.hidden ? "hidden" : ""}`}>
         <td className="gameHourPriceWrapper">
           <div className={`gameHourPrice ${this.definePriceHourClassName(this.props.data)}`}></div>
         </td>
@@ -50,6 +59,9 @@ class Game extends Component {
           <input className="priceInput" defaultValue={this.props.data.price} type="number" 
                  onBlur={() => this.props.saveData(this.props.data.appId, this.state.value)}
                  onKeyUp={(event) => this.handleInputSubmit(event, this.props.data.appId, this.props.data.playtimeForever)}/>
+        </td>
+        <td>
+          <button onClick={() => this.hideGame(this.props.data.appId)}>Hide</button>
         </td>
       </tr>
     )
