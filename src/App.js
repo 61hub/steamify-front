@@ -4,6 +4,7 @@ import axios from 'axios'
 import Game from "./Game"
 import {countPriceHour} from "./helpers"
 import * as _ from "lodash"
+import {connect} from "react-redux"
 
 class App extends Component {
   constructor(props) {
@@ -13,14 +14,13 @@ class App extends Component {
       serverStatus: "",
       gamePriceStatus: "",
       sortedBy: "pricePerHour",
-      sortOrder: "asc",
+      sortOrder: "desc",
     };
   }
 
   componentDidMount() {
     axios.get(`http://steamify-api.61hub.com/v1/games`)
       .then(response => {
-
         const mappedData = response.data.map((el) => {
           if (isNaN(parseInt(el.price))) {
             el.price = 0
@@ -31,7 +31,7 @@ class App extends Component {
           el.pricePerHour = pricePerHour
           return el
         }).filter((el) => el.hidden == false )
-        this.setState({games: mappedData})
+        this.props.dispatchGamesToStore(mappedData);
 
       })
   }
@@ -41,13 +41,13 @@ class App extends Component {
     axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {price: parseInt(value)})
       .then(response => this.setState({serverStatus: "success"}))
       .catch(response => this.setState({serverStatus: "error"}));
-    const clonedGames = [...this.state.games];
+    const clonedGames = [...this.props.games];
     const elementToUpdatePrice = clonedGames.find((element) => element.appId == appid);
     const indexElToUpdatePrice = clonedGames.findIndex((element) => element.appId == appid);
     const updated = {...elementToUpdatePrice};
     updated.price = parseInt(value);
     clonedGames[indexElToUpdatePrice] = updated;
-    this.setState({games: clonedGames});
+    this.props.dispatchGamesToStore(clonedGames);
   }
   handleSortClick = (type) => {
     console.log(type);
@@ -57,9 +57,10 @@ class App extends Component {
     this.setState({sortOrder: type})
   }
   render() {
+
     let price = 0;
     let playtimeForever = 0;
-     this.state.games.forEach((el) => {
+     this.props.games.forEach((el) => {
       price = price + el.price;
       playtimeForever = playtimeForever + el.playtimeForever;
 
@@ -87,7 +88,7 @@ class App extends Component {
             </tr>
             </thead>
             <tbody>
-            {_.orderBy(this.state.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
+            {_.orderBy(this.props.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
               .map((el, index) =>
                 <Game key={el.appId} data={el} index={index} saveData={this.saveData}/>
               )}
@@ -100,5 +101,19 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(
+  (state) => ({
+    games: state.games
+  }),
+  (dispatch) => {
+    return {
+    dispatchGamesToStore (data) {
+      dispatch({
+        data: data,
+        type: "gamesToStore"
+      })
+    }
+    }
+  }
+)(App);
 

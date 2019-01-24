@@ -57,7 +57,6 @@ class Game extends Component {
         <td colSpan="2" className="gameDuration">{this.props.data.playtimeForeverReadable.replace(" days","d").replace(" hours", "h").replace(" minutes", "m")}</td>
         <td>
           <input className="priceInput" defaultValue={this.props.data.price} type="number" 
-                 onBlur={() => this.props.saveData(this.props.data.appId, this.state.value)}
                  onKeyUp={(event) => this.handleInputSubmit(event, this.props.data.appId, this.props.data.playtimeForever)}/>
         </td>
         <td>
