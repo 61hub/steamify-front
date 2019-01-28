@@ -6,6 +6,8 @@ import axios from 'axios'
 class Game extends Component {
   constructor(props) {
     super(props);
+    this.dlcNameRef = React.createRef();
+    this.dlcPriceRef = React.createRef();
     this.state = {
       value: "",
       hidden: props.data.hidden
@@ -13,25 +15,31 @@ class Game extends Component {
   }
 
   handleInputSubmit = (event, appid) => {
-    if(event.keyCode == 13) {
+    if (event.keyCode == 13) {
       this.props.saveData(appid, this.state.value);
     }
     else {
       this.setState({value: event.target.value});
     }
   };
+  handleDlc = (event, appid) => {
+    if (event.keyCode == 13) {
+      this.props.saveDataDlc(appid, this.dlcNameRef.current.value, this.dlcPriceRef.current.value)
+      console.log(this.dlcNameRef.current.value)
+    }
+  }
 
   definePriceHourClassName = (el) => {
     let priceHour = countPriceHour(el);
-    if(priceHour <= 10) {
+    if (priceHour <= 10) {
       return "darkGreen"
-    } else if(priceHour <=50) {
+    } else if (priceHour <= 50) {
       return "green"
-    } else if(priceHour <= 100) {
+    } else if (priceHour <= 100) {
       return "yellow"
-    } else if(priceHour <= 200) {
+    } else if (priceHour <= 200) {
       return "orange"
-    } else if(priceHour >= 200 ) {
+    } else if (priceHour >= 200) {
       return "red"
     }
   };
@@ -43,6 +51,7 @@ class Game extends Component {
     });
 
   };
+
   render() {
     return (
       <tr className={`gameWrapper ${this.state.hidden ? "hidden" : ""}`}>
@@ -54,14 +63,39 @@ class Game extends Component {
           <img src={this.props.data.icon}></img>
         </td>
         <td>{this.props.data.name}</td>
-        <td colSpan="2" className="gameDuration">{this.props.data.playtimeForeverReadable.replace(" days","d").replace(" hours", "h").replace(" minutes", "m")}</td>
+        <td colSpan="2"
+            className="gameDuration">{this.props.data.playtimeForeverReadable.replace(" days", "d").replace(" hours", "h").replace(" minutes", "m")}</td>
         <td>
-          <input className="priceInput" defaultValue={this.props.data.price} type="number" 
+          <input className="priceInput" defaultValue={this.props.data.price} type="number"
                  onKeyUp={(event) => this.handleInputSubmit(event, this.props.data.appId, this.props.data.playtimeForever)}/>
         </td>
         <td>
           <button onClick={() => this.hideGame(this.props.data.appId)}>Hide</button>
         </td>
+        {
+          this.props.data.dlc.length > 0 ?
+            <div>
+              {this.props.data.dlc.map((el) =>  <div><td>{el.name}</td><td>{el.price}</td></div>)}
+            <td><input className="dlcInput" placeholder="DLC name" type="text"
+          onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/></td>
+              {/*<td><input className="dlcInput" placeholder="DLC name" type="text"*/}
+                         {/*onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/></td>*/}
+              <td>
+                <input className="dlcInput" placeholder="DLC price" type="text"
+                       onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
+              </td>
+            </div>
+            :
+            <div>
+            <td><input className="dlcInput" placeholder="DLC name" type="text"
+                       onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/></td>
+
+            <td>
+            <input className="dlcInput" placeholder="DLC price" type="text"
+          onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
+          </td>
+            </div>
+        }
       </tr>
     )
   }

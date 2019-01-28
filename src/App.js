@@ -48,14 +48,32 @@ class App extends Component {
     updated.price = parseInt(value);
     clonedGames[indexElToUpdatePrice] = updated;
     this.props.dispatchGamesToStore(clonedGames);
-  }
+  };
+  saveDataDlc = (appid, nameValue, priceValue) => {
+    const clonedGames = [...this.props.games];
+    const elementToUpdatePrice = clonedGames.find((element) => element.appId == appid);
+
+    this.setState({serverStatus: "loading"});
+    axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {dlc: [...elementToUpdatePrice.dlc, {name:nameValue, price:priceValue}]})
+      .then(response => this.setState({serverStatus: "success"}))
+      .catch(response => this.setState({serverStatus: "error"}));
+
+
+    const indexElToUpdatePrice = clonedGames.findIndex((element) => element.appId == appid);
+    const updated = {...elementToUpdatePrice};
+    updated.dlc = [...updated.dlc, {name: nameValue, price: priceValue}];
+    clonedGames[indexElToUpdatePrice] = updated;
+    console.log(clonedGames[indexElToUpdatePrice]);
+
+    this.props.dispatchGamesToStore(clonedGames);
+  };
   handleSortClick = (type) => {
     console.log(type);
     this.setState({sortedBy: type})
   };
   handleSortOrder = (type) => {
     this.setState({sortOrder: type})
-  }
+  };
   render() {
 
     let price = 0;
@@ -90,7 +108,7 @@ class App extends Component {
             <tbody>
             {_.orderBy(this.props.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
               .map((el, index) =>
-                <Game key={el.appId} data={el} index={index} saveData={this.saveData}/>
+                <Game key={el.appId} data={el} index={index} saveData={this.saveData} saveDataDlc={this.saveDataDlc}/>
               )}
             </tbody>
           </table>
