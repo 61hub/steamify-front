@@ -58,6 +58,7 @@ table {
   border-radius: 50%;
   width: 8px;
   overflow: hidden;
+  margin-right: 8px;
 }
 .gameHourPrice.darkGreen {
   background-color: darkgreen;
@@ -76,9 +77,34 @@ table {
 }
 .gameHourPriceWrapper {
 }
+.gameWrapper {
+  display: table-row;
+  /*justify-content: space-between;*/
+}
+.gameWrapper > * {
+  display: table-cell;
+  line-height: 1;
+}
+
 .gameWrapper.hidden {
   display: none;
 }
 .dlcInput {
   color: black;
+  width: 190px;
+}
+.mainWrapper {
+  width: 60%;
+  margin: 0 auto;
+}
+.gameIcon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.dlcWrapperHidden {
+  display: none;
+}
+.dlcWrapper {
+  display: table-cell;
 }

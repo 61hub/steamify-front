@@ -97,21 +97,20 @@ class App extends Component {
           </div>
           <div>{`Total price: ${price}`}</div>
           <div>{`Total playtime: ${Math.round(playtimeForever / 60 / 24)}`}</div>
-          <table>
-            <thead>
-            <tr>
-              <th colSpan='4'>Game's name</th>
-              <th colSpan="2">Game play duration</th>
-              <th colSpan='1'>Price</th>
-            </tr>
-            </thead>
-            <tbody>
+          <div className="mainWrapper">
+
+          <div>
+              <div>Game's name</div>
+              <div>Game play duration</div>
+              <div>Price</div>
+            </div>
+
+
             {_.orderBy(this.props.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
               .map((el, index) =>
                 <Game key={el.appId} data={el} index={index} saveData={this.saveData} saveDataDlc={this.saveDataDlc}/>
               )}
-            </tbody>
-          </table>
+          </div>
         </div>
       </div>
 
