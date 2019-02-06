@@ -54,7 +54,7 @@ class Game extends Component {
 
   };
   openDlc = (e) => {
-    if(this.state.dlcClassName == "dlcWrapper") {
+    if (this.state.dlcClassName == "dlcWrapper") {
       this.setState({dlcClassName: "dlcWrapperHidden"})
     } else {
       this.setState({dlcClassName: "dlcWrapper"})
@@ -73,36 +73,7 @@ class Game extends Component {
           <img src={this.props.data.icon}></img>
         </div>
         <div className="gameName" onClick={(e) => this.openDlc(e)}>{this.props.data.name}</div>
-        <div className={this.state.dlcClassName}>
-        {
-          this.props.data.dlc.length > 0 ?
-            <div>
-              {this.props.data.dlc.map((el) => <div>
-                <div>{el.name}</div>
-                <div>{el.price}</div>
-              </div>)}
-              <div><input className="dlcInput" placeholder="DLC name" type="text"
-                          onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/>
-              </div>
 
-              <div>
-                <input className="dlcInput" placeholder="DLC price" type="text"
-                       onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
-              </div>
-            </div>
-            :
-            <div>
-              <div><input className="dlcInput" placeholder="DLC name" type="text"
-                          onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/>
-              </div>
-
-              <div>
-                <input className="dlcInput" placeholder="DLC price" type="text"
-                       onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
-              </div>
-            </div>
-        }
-        </div>
 
         <div colSpan="2"
              className="gameDuration">{this.props.data.playtimeForeverReadable.replace(" days", "d").replace(" hours", "h").replace(" minutes", "m")}</div>
@@ -112,6 +83,36 @@ class Game extends Component {
         </div>
         <div>
           <button onClick={() => this.hideGame(this.props.data.appId)}>Hide</button>
+        </div>
+        <div className={this.state.dlcClassName}>
+          {
+            this.props.data.dlc.length > 0 ?
+              <div>
+                {this.props.data.dlc.map((el) => <div>
+                  <div>{el.name}</div>
+                  <div>{el.price}</div>
+                </div>)}
+                <div><input className="dlcInput" placeholder="DLC name" type="text"
+                            onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/>
+                </div>
+
+                <div>
+                  <input className="dlcInput" placeholder="DLC price" type="text"
+                         onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
+                </div>
+              </div>
+              :
+              <div>
+                <div><input className="dlcInput" placeholder="DLC name" type="text"
+                            onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/>
+                </div>
+
+                <div>
+                  <input className="dlcInput" placeholder="DLC price" type="text"
+                         onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
+                </div>
+              </div>
+          }
         </div>
 
       </div>
