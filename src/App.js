@@ -17,8 +17,7 @@ class App extends Component {
       sortOrder: "desc",
     };
   }
-
-  componentDidMount() {
+  fetchData = () => {
     axios.get(`http://steamify-api.61hub.com/v1/games`)
       .then(response => {
         const mappedData = response.data.map((el) => {
@@ -34,6 +33,9 @@ class App extends Component {
         this.props.dispatchGamesToStore(mappedData);
 
       })
+  }
+  componentDidMount() {
+   this.fetchData();
   }
 
   saveData = (appid, value) => {
@@ -74,6 +76,9 @@ class App extends Component {
   handleSortOrder = (type) => {
     this.setState({sortOrder: type})
   };
+  handleRefreshButton = () => {
+    this.fetchData();
+  }
   render() {
 
     let price = 0;
@@ -97,6 +102,7 @@ class App extends Component {
           </div>
           <div>{`Total price: ${price}`}</div>
           <div>{`Total playtime: ${Math.round(playtimeForever / 60 / 24)}`}</div>
+          <div onClick={this.handleRefreshButton}><button>Refresh</button></div>
           <div className="mainWrapper">
 
           <div>

@@ -1,20 +1,21 @@
-export const countPriceHour = (el) => {
-  if(el.dlc.length > 0) {
-    let dlcPrice;
-    el.dlc.map((dlcEl) => {
-      // dlcPrice = dlcEl.price + el.price;
-      console.log(dlcEl);
+export const countPriceHour = (game) => {
+  let dlcPrice = 0;
+
+  if(game.dlc.length > 0) {
+    game.dlc.forEach((dlcEl) => {
+      dlcPrice = dlcPrice + dlcEl.price;
     })
   }
 
   let priceHour;
-  if (el.playtimeForever <= 60) {
-    priceHour = el.price;
+  if (game.playtimeForever <= 60) {
+    priceHour = game.price + dlcPrice;
     return priceHour
   } else {
-    let playTimeInHours = el.playtimeForever / 60;
-    priceHour = Math.round(el.price / playTimeInHours);
+    let playTimeInHours = game.playtimeForever / 60;
+    priceHour = Math.round((game.price  + dlcPrice) / playTimeInHours);
     return priceHour
   }
 };
+
 

@@ -33,6 +33,7 @@ class Game extends Component {
 
   definePriceHourClassName = (el) => {
     let priceHour = countPriceHour(el);
+    console.log(priceHour);
     if (priceHour <= 10) {
       return "darkGreen"
     } else if (priceHour <= 50) {
@@ -63,7 +64,8 @@ class Game extends Component {
   }
 
   render() {
-    return (
+    return(
+    <>
       <div className={`gameWrapper ${this.state.hidden ? "hidden" : ""}`}>
         <div className="gameHourPriceWrapper">
           <div className={`gameHourPrice ${this.definePriceHourClassName(this.props.data)}`}></div>
@@ -84,38 +86,39 @@ class Game extends Component {
         <div>
           <button onClick={() => this.hideGame(this.props.data.appId)}>Hide</button>
         </div>
-        <div className={this.state.dlcClassName}>
-          {
-            this.props.data.dlc.length > 0 ?
-              <div>
-                {this.props.data.dlc.map((el) => <div>
-                  <div>{el.name}</div>
-                  <div>{el.price}</div>
-                </div>)}
-                <div><input className="dlcInput" placeholder="DLC name" type="text"
-                            onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/>
-                </div>
-
-                <div>
-                  <input className="dlcInput" placeholder="DLC price" type="text"
-                         onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
-                </div>
-              </div>
-              :
-              <div>
-                <div><input className="dlcInput" placeholder="DLC name" type="text"
-                            onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/>
-                </div>
-
-                <div>
-                  <input className="dlcInput" placeholder="DLC price" type="text"
-                         onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
-                </div>
-              </div>
-          }
-        </div>
-
       </div>
+    <div className={this.state.dlcClassName}>
+      {
+        this.props.data.dlc.length > 0 ?
+          <div>
+            {this.props.data.dlc.map((el) => <div>
+              <div>{el.name}</div>
+              <div>{el.price}</div>
+            </div>)}
+            <div><input className="dlcInput" placeholder="DLC name" type="text"
+                        onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/>
+            </div>
+
+            <div>
+              <input className="dlcInput" placeholder="DLC price" type="text"
+                     onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
+            </div>
+          </div>
+          :
+          <div>
+            <div><input className="dlcInput" placeholder="DLC name" type="text"
+                        onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/>
+            </div>
+
+            <div>
+              <input className="dlcInput" placeholder="DLC price" type="text"
+                     onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
+            </div>
+          </div>
+      }
+    </div>
+
+    </>
     )
   }
 }
