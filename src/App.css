@@ -42,7 +42,7 @@ table {
   background: green;
   position: fixed;
   top: 5px;
-  left: 5px;
+  left: 100px;
 }
 .loadingState.loading {
   background-color: yellow;
@@ -95,6 +95,7 @@ table {
 .mainWrapper {
   width: 60%;
   margin: 0 auto;
+  padding-top: 100px;
 }
 .gameIcon {
   display: inline-block;
@@ -106,4 +107,15 @@ table {
 }
 .dlcWrapper {
   display: table-cell;
+}
+.menu {
+  position: fixed;
+}
+.packageWrapper {
+  text-align: center;
+}
+.packageWrapper form > * {
+  margin-right: 10px;
+  color: black;
+
 }

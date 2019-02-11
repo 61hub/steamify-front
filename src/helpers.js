@@ -1,7 +1,7 @@
 export const countPriceHour = (game) => {
   let dlcPrice = 0;
 
-  if(game.dlc.length > 0) {
+  if(game.items == undefined && game.dlc.length > 0) {
     game.dlc.forEach((dlcEl) => {
       dlcPrice = dlcPrice + dlcEl.price;
     })

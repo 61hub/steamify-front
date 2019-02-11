@@ -78,7 +78,7 @@ class Game extends Component {
 
 
         <div colSpan="2"
-             className="gameDuration">{this.props.data.playtimeForeverReadable.replace(" days", "d").replace(" hours", "h").replace(" minutes", "m")}</div>
+             className="gameDuration">{this.props.data.items ? null : this.props.data.playtimeForeverReadable.replace(" days", "d").replace(" hours", "h").replace(" minutes", "m")}</div>
         <div>
           <input className="priceInput" defaultValue={this.props.data.price} type="number"
                  onKeyUp={(event) => this.handleInputSubmit(event, this.props.data.appId, this.props.data.playtimeForever)}/>
@@ -89,7 +89,7 @@ class Game extends Component {
       </div>
     <div className={this.state.dlcClassName}>
       {
-        this.props.data.dlc.length > 0 ?
+        this.props.data.items == undefined && this.props.data.dlc.length > 0 ?
           <div>
             {this.props.data.dlc.map((el) => <div>
               <div>{el.name}</div>

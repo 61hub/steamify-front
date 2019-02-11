@@ -9,15 +9,20 @@ import {connect} from "react-redux"
 class App extends Component {
   constructor(props) {
     super(props);
+    this.formInputNameRef = React.createRef();
+    this.formInputPriceRef = React.createRef();
+
     this.state = {
       games: [],
       serverStatus: "",
       gamePriceStatus: "",
       sortedBy: "pricePerHour",
       sortOrder: "desc",
+      packs: []
     };
   }
-  fetchData = () => {
+
+  fetchGamesData = () => {
     axios.get(`http://steamify-api.61hub.com/v1/games`)
       .then(response => {
         const mappedData = response.data.map((el) => {
@@ -29,13 +34,23 @@ class App extends Component {
           const pricePerHour = countPriceHour(el);
           el.pricePerHour = pricePerHour
           return el
-        }).filter((el) => el.hidden == false )
+        }).filter((el) => el.hidden == false)
         this.props.dispatchGamesToStore(mappedData);
 
       })
   }
+  fetchPacksData = () => {
+    axios.get(`http://steamify-api.61hub.com/v1/packs`)
+      .then(response => {
+        const packsData = response.data;
+        this.props.dispatchPacksToSTore(packsData);
+      })
+  }
+
+
   componentDidMount() {
-   this.fetchData();
+    this.fetchGamesData();
+    this.fetchPacksData();
   }
 
   saveData = (appid, value) => {
@@ -56,7 +71,12 @@ class App extends Component {
     const elementToUpdatePrice = clonedGames.find((element) => element.appId == appid);
 
     this.setState({serverStatus: "loading"});
-    axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {dlc: [...elementToUpdatePrice.dlc, {name:nameValue, price:priceValue}]})
+    axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {
+      dlc: [...elementToUpdatePrice.dlc, {
+        name: nameValue,
+        price: priceValue
+      }]
+    })
       .then(response => this.setState({serverStatus: "success"}))
       .catch(response => this.setState({serverStatus: "error"}));
 
@@ -77,13 +97,21 @@ class App extends Component {
     this.setState({sortOrder: type})
   };
   handleRefreshButton = () => {
-    this.fetchData();
+    this.fetchGamesData();
   }
+  submitFormData = (e) => {
+    e.preventDefault();
+    const inputName = this.formInputNameRef.current.value;
+    const inputPrice = this.formInputPriceRef.current.value;
+    axios.post(`http://steamify-api.61hub.com/v1/packs`, {name: inputName, price: inputPrice})
+
+  }
+
   render() {
 
     let price = 0;
     let playtimeForever = 0;
-     this.props.games.forEach((el) => {
+    this.props.games.forEach((el) => {
       price = price + el.price;
       playtimeForever = playtimeForever + el.playtimeForever;
 
@@ -92,25 +120,29 @@ class App extends Component {
       <div className="container">
         <div className="overlay">
           <div className={`loadingState ${this.state.serverStatus}`}></div>
-          <div>
+          <div className="menu">
             Sort by:
             <div><input type="radio" name="sort" onChange={() => this.handleSortClick("price")}/>Price</div>
             <div><input type="radio" name="sort" onChange={() => this.handleSortClick("playtimeForever")}/>Hours</div>
-            <div><input type="radio" name="sort" onChange={() => this.handleSortClick("pricePerHour")}/>Price per hour</div>
+            <div><input type="radio" name="sort" onChange={() => this.handleSortClick("pricePerHour")}/>Price per hour
+            </div>
             <div><input type="radio" name="order" onChange={() => this.handleSortOrder("asc")}/>Asc</div>
             <div><input type="radio" name="order" onChange={() => this.handleSortOrder("desc")}/>Desc</div>
-          </div>
-          <div>{`Total price: ${price}`}</div>
-          <div>{`Total playtime: ${Math.round(playtimeForever / 60 / 24)}`}</div>
-          <div onClick={this.handleRefreshButton}><button>Refresh</button></div>
-          <div className="mainWrapper">
-
-          <div>
-              <div>Game's name</div>
-              <div>Game play duration</div>
-              <div>Price</div>
+            <div>{`Total price: ${price}`}</div>
+            <div>{`Total playtime: ${Math.round(playtimeForever / 60 / 24)}`}</div>
+            <div onClick={this.handleRefreshButton}>
+              <button>Refresh</button>
             </div>
+          </div>
+          <div className="packageWrapper">
+            <form onSubmit={this.submitFormData}>
+              <input type="text" placeholder="Package name" ref={this.formInputNameRef}/>
+              <input type="number" placeholder="Package price" ref={this.formInputPriceRef}/>
+              <button>Сохранить</button>
+            </form>
+          </div>
 
+          <div className="mainWrapper">
 
             {_.orderBy(this.props.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
               .map((el, index) =>
@@ -130,12 +162,18 @@ export default connect(
   }),
   (dispatch) => {
     return {
-    dispatchGamesToStore (data) {
-      dispatch({
-        data: data,
-        type: "gamesToStore"
-      })
-    }
+      dispatchGamesToStore (data) {
+        dispatch({
+          data: data,
+          type: "gamesToStore"
+        })
+      },
+      dispatchPacksToSTore (packs) {
+        dispatch({
+          packs: packs,
+          type: "packsToStore"
+        })
+      }
     }
   }
 )(App);
