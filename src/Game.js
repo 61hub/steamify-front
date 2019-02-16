@@ -8,6 +8,7 @@ class Game extends Component {
     super(props);
     this.dlcNameRef = React.createRef();
     this.dlcPriceRef = React.createRef();
+    this.selectRef = React.createRef();
     this.state = {
       value: "",
       hidden: props.data.hidden,
@@ -27,13 +28,13 @@ class Game extends Component {
   handleDlc = (event, appid) => {
     if (event.keyCode == 13) {
       this.props.saveDataDlc(appid, this.dlcNameRef.current.value, this.dlcPriceRef.current.value)
-      console.log(this.dlcNameRef.current.value)
+      // console.log(this.dlcNameRef.current.value)
     }
   }
 
   definePriceHourClassName = (el) => {
     let priceHour = countPriceHour(el);
-    console.log(priceHour);
+    // console.log(priceHour);
     if (priceHour <= 10) {
       return "darkGreen"
     } else if (priceHour <= 50) {
@@ -48,7 +49,7 @@ class Game extends Component {
   };
 
   hideGame = (appId) => {
-    console.log(appId);
+    // console.log(appId);
     this.setState({gameClassName: "hide", hidden: true}, () => {
       axios.patch(`http://steamify-api.61hub.com/v1/games/${appId}`, {hidden: this.state.hidden});
     });
@@ -62,6 +63,16 @@ class Game extends Component {
 
     }
   }
+  patchSubmitedData = (appId, e) => {
+    e.preventDefault();
+    const stringAppid = appId.toString();
+    console.log(stringAppid);
+    const packId = this.selectRef.current.options[this.selectRef.current.selectedIndex].value;
+    const foundPack = this.props.packages.find((el) => el.packId == packId);
+    axios.patch(`http://steamify-api.61hub.com/v1/packs/${packId}`, {items:[...foundPack.items, appId]});
+    this.hideGame(appId);
+  }
+
 
   render() {
     return(
@@ -85,6 +96,18 @@ class Game extends Component {
         </div>
         <div>
           <button onClick={() => this.hideGame(this.props.data.appId)}>Hide</button>
+        </div>
+        <div>
+          <form onSubmit={(e) => this.patchSubmitedData(this.props.data.appId, e)}>
+            <select ref={this.selectRef}>
+
+                {this.props.data.items ? null : this.props.packages.map((pack) => <option value={pack.packId}>{pack.name}</option>) }
+
+
+            </select>
+          <button>Package</button>
+          </form>
+
         </div>
       </div>
     <div className={this.state.dlcClassName}>

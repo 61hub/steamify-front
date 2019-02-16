@@ -18,7 +18,7 @@ class App extends Component {
       gamePriceStatus: "",
       sortedBy: "pricePerHour",
       sortOrder: "desc",
-      packs: []
+      packs: [],
     };
   }
 
@@ -51,6 +51,28 @@ class App extends Component {
   componentDidMount() {
     this.fetchGamesData();
     this.fetchPacksData();
+    this.getPacks();
+  }
+  getPacks = () => {
+    axios.get(`http://steamify-api.61hub.com/v1/packs`)
+      .then(response => {
+        response.data.map((pack) => {
+          console.log(pack);
+          pack.items.map((id) => {
+             const appId = id;
+             const parsedId = parseInt(appId);
+             axios.get(`http://steamify-api.61hub.com/v1/games`)
+               .then(response => {
+                const foundGame = response.data.find((el) => {
+                   return (el.appId == parsedId)
+                 })
+                 console.log(foundGame);
+               })
+          })
+            // this.setState({gameId:  })
+        })
+
+      });
   }
 
   saveData = (appid, value) => {
@@ -85,12 +107,12 @@ class App extends Component {
     const updated = {...elementToUpdatePrice};
     updated.dlc = [...updated.dlc, {name: nameValue, price: priceValue}];
     clonedGames[indexElToUpdatePrice] = updated;
-    console.log(clonedGames[indexElToUpdatePrice]);
+    // console.log(clonedGames[indexElToUpdatePrice]);
 
     this.props.dispatchGamesToStore(clonedGames);
   };
   handleSortClick = (type) => {
-    console.log(type);
+    // console.log(type);
     this.setState({sortedBy: type})
   };
   handleSortOrder = (type) => {
@@ -146,7 +168,9 @@ class App extends Component {
 
             {_.orderBy(this.props.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
               .map((el, index) =>
-                <Game key={el.appId} data={el} index={index} saveData={this.saveData} saveDataDlc={this.saveDataDlc}/>
+                <Game key={el.appId} data={el} index={index} saveData={this.saveData} saveDataDlc={this.saveDataDlc}
+                packages={this.props.games.filter((el) => el.items)} packId={this.state.packId}
+                />
               )}
           </div>
         </div>
