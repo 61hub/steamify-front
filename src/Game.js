@@ -94,10 +94,10 @@ class Game extends Component {
           <input className="priceInput" defaultValue={this.props.data.price} type="number"
                  onKeyUp={(event) => this.handleInputSubmit(event, this.props.data.appId, this.props.data.playtimeForever)}/>
         </div>
-        <div>
+        <div className="hideButton">
           <button onClick={() => this.hideGame(this.props.data.appId)}>Hide</button>
         </div>
-        <div>
+        <div className="dropDownPacks">
           <form onSubmit={(e) => this.patchSubmitedData(this.props.data.appId, e)}>
             <select ref={this.selectRef}>
 
