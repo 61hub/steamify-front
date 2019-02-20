@@ -34,14 +34,31 @@ class App extends Component {
           const pricePerHour = countPriceHour(el);
           el.pricePerHour = pricePerHour
           return el
-        }).filter((el) => el.hidden == false)
+        })
         this.props.dispatchGamesToStore(mappedData);
+        this.fetchPacksData()
 
       })
   }
   fetchPacksData = () => {
     axios.get(`http://steamify-api.61hub.com/v1/packs`)
       .then(response => {
+        response.data.forEach((pack) => {
+          pack.games = [];
+          pack.items.forEach((id) => {
+            const appId = id;
+            const parsedId = parseInt(appId);
+            const foundGame = this.props.games.find((el) => {
+              // console.log(el)
+              // console.log(el.appId)
+              return el.appId == parsedId
+            })
+            // console.log(foundGame);
+            // console.log(parsedId)
+            // console.log(this.props.games)
+            pack.games.push(foundGame);
+          })
+        })
         const packsData = response.data;
         this.props.dispatchPacksToSTore(packsData);
       })
@@ -50,29 +67,6 @@ class App extends Component {
 
   componentDidMount() {
     this.fetchGamesData();
-    this.fetchPacksData();
-    this.getPacks();
-  }
-  getPacks = () => {
-    axios.get(`http://steamify-api.61hub.com/v1/packs`)
-      .then(response => {
-        response.data.map((pack) => {
-          console.log(pack);
-          pack.items.map((id) => {
-             const appId = id;
-             const parsedId = parseInt(appId);
-             axios.get(`http://steamify-api.61hub.com/v1/games`)
-               .then(response => {
-                const foundGame = response.data.find((el) => {
-                   return (el.appId == parsedId)
-                 })
-                 console.log(foundGame);
-               })
-          })
-            // this.setState({gameId:  })
-        })
-
-      });
   }
 
   saveData = (appid, value) => {
@@ -167,6 +161,7 @@ class App extends Component {
           <div className="mainWrapper">
 
             {_.orderBy(this.props.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
+              .filter((el) => el.hidden != true)
               .map((el, index) =>
                 <Game key={el.appId} data={el} index={index} saveData={this.saveData} saveDataDlc={this.saveDataDlc}
                 packages={this.props.games.filter((el) => el.items)} packId={this.state.packId}
@@ -196,6 +191,13 @@ export default connect(
         dispatch({
           packs: packs,
           type: "packsToStore"
+        })
+      },
+      dispatchNewItems (items, packId) {
+        dispatch({
+          packId: packId,
+          item: items,
+          type: "newItem"
         })
       }
     }

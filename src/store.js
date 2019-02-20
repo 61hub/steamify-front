@@ -12,6 +12,12 @@ function gamesReducer(state, action) {
       return {
         games: [...state.games, ...action.packs]
       }
+    case 'newItem':
+      const packId = action.packId
+      const item = action.item
+      const foundPack = {...state.games.find((game) => game.packId == packId)}
+      foundPack.items = [...foundPack.items, item]
+
   }
  return {
    games: []

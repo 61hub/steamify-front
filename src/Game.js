@@ -69,6 +69,7 @@ class Game extends Component {
     console.log(stringAppid);
     const packId = this.selectRef.current.options[this.selectRef.current.selectedIndex].value;
     const foundPack = this.props.packages.find((el) => el.packId == packId);
+
     axios.patch(`http://steamify-api.61hub.com/v1/packs/${packId}`, {items:[...foundPack.items, appId]});
     this.hideGame(appId);
   }
@@ -112,7 +113,7 @@ class Game extends Component {
       </div>
     <div className={this.state.dlcClassName}>
       {
-        this.props.data.items == undefined && this.props.data.dlc.length > 0 ?
+        this.props.data.items == undefined ?
           <div>
             {this.props.data.dlc.map((el) => <div>
               <div>{el.name}</div>
@@ -129,14 +130,7 @@ class Game extends Component {
           </div>
           :
           <div>
-            <div><input className="dlcInput" placeholder="DLC name" type="text"
-                        onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcNameRef}/>
-            </div>
-
-            <div>
-              <input className="dlcInput" placeholder="DLC price" type="text"
-                     onKeyUp={(event) => this.handleDlc(event, this.props.data.appId)} ref={this.dlcPriceRef}/>
-            </div>
+            {this.props.data.games.map((game) => game.name)}
           </div>
       }
     </div>
