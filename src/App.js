@@ -128,9 +128,10 @@ class App extends Component {
     let price = 0;
     let playtimeForever = 0;
     this.props.games.forEach((el) => {
-      price = price + getTotalPrice(el);
-      playtimeForever = playtimeForever + el.playtimeForever;
-
+      if (!el.hidden) {
+        price = price + getTotalPrice(el);
+        playtimeForever = playtimeForever + el.playtimeForever;
+      }
     });
     return (
       <div className="container">
