@@ -23,6 +23,15 @@ const formatPlaytime = (minutes) => {
   const mins = minutes % 60;
 
   return `${hrs}h ${mins}m`;
-}
+};
 
-export { countPriceHour, formatPlaytime }
+const getTotalPrice = (game) => {
+  let total = game.price
+  if (game.dlc && game.dlc.length) {
+    game.dlc.forEach(dlc => total = total + dlc.price)
+  }
+
+  return total;
+};
+
+export { countPriceHour, formatPlaytime, getTotalPrice }

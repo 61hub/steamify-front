@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import {countPriceHour, formatPlaytime} from "./helpers"
+import {countPriceHour, formatPlaytime, getTotalPrice} from "./helpers"
 import axios from 'axios'
 
 
@@ -13,7 +13,6 @@ class Game extends Component {
       value: "",
       hidden: props.data.hidden,
       dlcClassName: "dlcWrapperHidden"
-
     }
   }
 
@@ -55,12 +54,12 @@ class Game extends Component {
     });
 
   };
+
   openDlc = (e) => {
     if (this.state.dlcClassName == "dlcWrapper") {
       this.setState({dlcClassName: "dlcWrapperHidden"})
     } else {
       this.setState({dlcClassName: "dlcWrapper"})
-
     }
   };
 
@@ -77,23 +76,32 @@ class Game extends Component {
 
 
   render() {
-    const { data } = this.props;
+    const {data} = this.props;
 
+    let totalPrice = getTotalPrice(data);
     return (
       <>
         <div className={`gameWrapper ${this.state.hidden ? "hidden" : ""}`}>
-          <div className="gameHourPriceWrapper">
-            <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`}></div>
-          </div>
-          <div>{this.props.index + 1}</div>
+
           <div className="gameIcon">
-            <img src={data.icon}/>
+            <img src={data.logo}/>
           </div>
-          <div className="gameName" onClick={(e) => this.openDlc(e)}>{data.name}</div>
+
+          <div className='gameInformation'>
+            <div className="gameName" onClick={e => this.openDlc(e)}>{data.name}</div>
+            <div className="gameMinorInfo">
+              <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`}></div>
+              <div className='gameIndex'>#{this.props.index + 1}</div>
+              <div className='gameTotalPrice'>{totalPrice}P</div>
+            </div>
+          </div>
 
 
-          <div colSpan="2"
-               className="gameDuration">{formatPlaytime(data.playtimeForever)}</div>
+          <div className="gameDuration">{formatPlaytime(data.playtimeForever)}</div>
+        </div>
+
+
+        <div className={`${this.state.dlcClassName} options`}>
           <div>
             <input className="priceInput" defaultValue={data.price} type="number"
                    onKeyUp={(event) => this.handleInputSubmit(event, data.appId, data.playtimeForever)}/>
@@ -115,6 +123,7 @@ class Game extends Component {
 
           </div>
         </div>
+
         <div className={this.state.dlcClassName}>
           {
             data.type === 'pack' ?
@@ -122,9 +131,9 @@ class Game extends Component {
                 {data.games.map((game) => `${game.name} ${formatPlaytime(game.playtimeForever)} `)}
               </div>
               :
-              <div>
-                {data.dlc.map((el) => <div>
-                  <div>{el.name}</div>
+              <>
+                {data.dlc.map(el => <div className='dlc'>
+                  <div className='dlcName'>{el.name}</div>
                   <div>{el.price}</div>
                 </div>)}
                 <div>
@@ -136,7 +145,7 @@ class Game extends Component {
                   <input className="dlcInput" placeholder="DLC price" type="text"
                          onKeyUp={(event) => this.handleDlc(event, data.appId)} ref={this.dlcPriceRef}/>
                 </div>
-              </div>
+              </>
           }
         </div>
 

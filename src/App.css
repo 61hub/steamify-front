@@ -1,29 +1,14 @@
 
 body {
-  background-image: url("./icons/background-image.jpg");
+  background: #131B25;
   height: 100%;
-  background-attachment: fixed;
-  background-size: cover;
   font-family: Lato, sans-serif;
   color: white;
 }
 input {
   color: white;
 }
-.overlay {
-  background-color: #1b2031 ;
-  opacity: 0.5;
-}
 
-th {
-  font-weight: 900;
-  font-size: 18px;
-}
-td {
-}
-table {
-  margin: 0 auto;
-}
 .gameDuration {
   font-weight: 600;
   text-align: center;
@@ -78,13 +63,6 @@ table {
 }
 .gameHourPriceWrapper {
 }
-.gameWrapper {
-  display: table-row;
-}
-.gameWrapper > * {
-  display: table-cell;
-  line-height: 1;
-}
 
 .gameWrapper.hidden {
   display: none;
@@ -99,16 +77,11 @@ table {
   padding-top: 100px;
 }
 .gameIcon {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 5px;
+  width: 184px;
+  height: 69px;
+  background: linear-gradient(45deg, rgb(59, 59, 59) 0%, rgba(0,0,0,1) 100%);;
 }
-.dlcWrapperHidden {
-  display: none;
-}
-.dlcWrapper {
-  display: table-cell;
-}
+
 .menu {
   position: fixed;
 }
@@ -120,11 +93,61 @@ table {
   color: black;
 }
 
-.hideButton,
-.dropDownPacks {
-  visibility: hidden;
+.gameWrapper {
+  display: flex;
+  align-items: center;
+  background: #0F151C;
+  margin-bottom: 15px;
+  padding-right: 15px;
 }
-.gameWrapper:hover .hideButton,
-.gameWrapper:hover .dropDownPacks {
-  visibility: visible;
+
+.gameInformation {
+  flex-grow: 1;
+  padding-left: 15px;
+}
+
+.gameName {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.gameMinorInfo {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #586F7C;
+}
+
+.gameIndex {
+  margin-right: 10px;
+}
+
+.gameDuration {
+  font-size: 26px;
+}
+
+.dlcWrapper {
+  margin: 10px 0;
+}
+
+.dlcWrapperHidden {
+  display: none;
+}
+
+.dlc {
+  display: flex;
+  width: 100%;
+  margin: 2px 0;
+}
+.dlcName {
+  flex-grow: 1;
+}
+
+.options {
+  display: flex;
+  justify-content: space-around;
+}
+
+.options.dlcWrapperHidden {
+  display: none;
 }

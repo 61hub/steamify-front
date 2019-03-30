@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import axios from 'axios'
 import Game from "./Game"
-import {countPriceHour} from "./helpers"
+import {countPriceHour, getTotalPrice} from "./helpers"
 import * as _ from "lodash"
 import {connect} from "react-redux"
 
@@ -128,7 +128,7 @@ class App extends Component {
     let price = 0;
     let playtimeForever = 0;
     this.props.games.forEach((el) => {
-      price = price + el.price;
+      price = price + getTotalPrice(el);
       playtimeForever = playtimeForever + el.playtimeForever;
 
     });
@@ -144,8 +144,8 @@ class App extends Component {
             </div>
             <div><input type="radio" name="order" onChange={() => this.handleSortOrder("asc")}/>Asc</div>
             <div><input type="radio" name="order" onChange={() => this.handleSortOrder("desc")}/>Desc</div>
-            <div>{`Total price: ${price}`}</div>
-            <div>{`Total playtime: ${Math.round(playtimeForever / 60 / 24)}`}</div>
+            <div>{`Total price: ${price}P`}</div>
+            <div>{`Total playtime: ${Math.round(playtimeForever / 60)}hrs`}</div>
             <div onClick={this.handleRefreshButton}>
               <button>Refresh</button>
             </div>
