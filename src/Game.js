@@ -127,8 +127,8 @@ class Game extends Component {
         <div className={this.state.dlcClassName}>
           {
             data.type === 'pack' ?
-              <div>
-                {data.games.map((game) => `${game.name} ${formatPlaytime(game.playtimeForever)} `)}
+              <div className='packWrapper'>
+                {data.games.map((game) => <div><div>{game.name}</div> <div>{formatPlaytime(game.playtimeForever)}</div></div>)}
               </div>
               :
               <>

@@ -151,3 +151,11 @@ input {
 .options.dlcWrapperHidden {
   display: none;
 }
+
+.packWrapper > div {
+  display: flex;
+}
+
+.packWrapper > div :first-child {
+  flex-grow: 1;
+}
