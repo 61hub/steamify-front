@@ -3,6 +3,7 @@ body {
   background-image: url("./icons/background-image.jpg");
   height: 100%;
   background-attachment: fixed;
+  background-size: cover;
   font-family: Lato, sans-serif;
   color: white;
 }

@@ -1,7 +1,7 @@
-export const countPriceHour = (game) => {
+const countPriceHour = (game) => {
   let dlcPrice = 0;
 
-  if(game.items == undefined && game.dlc.length > 0) {
+  if(!game.items && game.dlc.length > 0) {
     game.dlc.forEach((dlcEl) => {
       dlcPrice = dlcPrice + dlcEl.price;
     })
@@ -18,4 +18,11 @@ export const countPriceHour = (game) => {
   }
 };
 
+const formatPlaytime = (minutes) => {
+  const hrs = Math.round(minutes / 60);
+  const mins = minutes % 60;
 
+  return `${hrs}h ${mins}m`;
+}
+
+export { countPriceHour, formatPlaytime }

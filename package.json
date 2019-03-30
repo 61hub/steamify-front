@@ -5,6 +5,7 @@
   "homepage": "http://steam.61hub.com",
   "dependencies": {
     "axios": "^0.18.0",
+    "date-fns": "^1.30.1",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
     "react": "^16.6.3",

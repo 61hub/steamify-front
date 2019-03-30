@@ -16,7 +16,7 @@ class App extends Component {
       games: [],
       serverStatus: "",
       gamePriceStatus: "",
-      sortedBy: "pricePerHour",
+      sortedBy: "playtimeForever",
       sortOrder: "desc",
       packs: [],
     };
@@ -39,31 +39,28 @@ class App extends Component {
         this.fetchPacksData()
 
       })
-  }
+  };
+
   fetchPacksData = () => {
     axios.get(`http://steamify-api.61hub.com/v1/packs`)
       .then(response => {
         response.data.forEach((pack) => {
           pack.games = [];
+          pack.type = 'pack';
           pack.items.forEach((id) => {
-            const appId = id;
-            const parsedId = parseInt(appId);
             const foundGame = this.props.games.find((el) => {
-              // console.log(el)
-              // console.log(el.appId)
-              return el.appId == parsedId
-            })
-            // console.log(foundGame);
-            // console.log(parsedId)
-            // console.log(this.props.games)
+              return el.appId === parseInt(id)
+            });
             pack.games.push(foundGame);
           })
-        })
-        const packsData = response.data;
-        this.props.dispatchPacksToSTore(packsData);
-      })
-  }
 
+          pack.playtimeForever = 0;
+          pack.games.forEach(g => pack.playtimeForever += g.playtimeForever);
+        });
+
+        this.props.dispatchPacksToStore(response.data);
+      })
+  };
 
   componentDidMount() {
     this.fetchGamesData();
@@ -82,6 +79,7 @@ class App extends Component {
     clonedGames[indexElToUpdatePrice] = updated;
     this.props.dispatchGamesToStore(clonedGames);
   };
+
   saveDataDlc = (appid, nameValue, priceValue) => {
     const clonedGames = [...this.props.games];
     const elementToUpdatePrice = clonedGames.find((element) => element.appId == appid);
@@ -105,26 +103,28 @@ class App extends Component {
 
     this.props.dispatchGamesToStore(clonedGames);
   };
+
   handleSortClick = (type) => {
     // console.log(type);
     this.setState({sortedBy: type})
   };
+
   handleSortOrder = (type) => {
     this.setState({sortOrder: type})
   };
+
   handleRefreshButton = () => {
     this.fetchGamesData();
-  }
-  submitFormData = (e) => {
+  };
+
+  addPack = (e) => {
     e.preventDefault();
     const inputName = this.formInputNameRef.current.value;
     const inputPrice = this.formInputPriceRef.current.value;
     axios.post(`http://steamify-api.61hub.com/v1/packs`, {name: inputName, price: inputPrice})
-
-  }
+  };
 
   render() {
-
     let price = 0;
     let playtimeForever = 0;
     this.props.games.forEach((el) => {
@@ -151,7 +151,7 @@ class App extends Component {
             </div>
           </div>
           <div className="packageWrapper">
-            <form onSubmit={this.submitFormData}>
+            <form onSubmit={this.addPack}>
               <input type="text" placeholder="Package name" ref={this.formInputNameRef}/>
               <input type="number" placeholder="Package price" ref={this.formInputPriceRef}/>
               <button>Сохранить</button>
@@ -187,7 +187,7 @@ export default connect(
           type: "gamesToStore"
         })
       },
-      dispatchPacksToSTore (packs) {
+      dispatchPacksToStore (packs) {
         dispatch({
           packs: packs,
           type: "packsToStore"
