@@ -32,33 +32,33 @@ class App extends Component {
             el.price = parseInt(el.price)
           }
           const pricePerHour = countPriceHour(el);
-          el.pricePerHour = pricePerHour
+          el.pricePerHour = pricePerHour;
           return el
         })
-        this.props.dispatchGamesToStore(mappedData);
-        this.fetchPacksData()
-
+        this.fetchPacksData(mappedData)
       })
   };
 
-  fetchPacksData = () => {
+  fetchPacksData = (gamesData) => {
     axios.get(`http://steamify-api.61hub.com/v1/packs`)
       .then(response => {
         response.data.forEach((pack) => {
           pack.games = [];
           pack.type = 'pack';
           pack.items.forEach((id) => {
-            const foundGame = this.props.games.find((el) => {
+            const foundGame = gamesData.find((el) => {
               return el.appId === parseInt(id)
             });
             pack.games.push(foundGame);
-          })
+          });
 
           pack.playtimeForever = 0;
-          pack.games.forEach(g => pack.playtimeForever += g.playtimeForever);
+          if (pack.games && pack.games.length) {
+            pack.games.forEach(g => pack.playtimeForever += g.playtimeForever);
+          }
         });
 
-        this.props.dispatchPacksToStore(response.data);
+        this.props.dataFetched([...response.data, ...gamesData]);
       })
   };
 
@@ -66,18 +66,14 @@ class App extends Component {
     this.fetchGamesData();
   }
 
-  saveData = (appid, value) => {
+  saveData = (appId, price) => {
     this.setState({serverStatus: "loading"});
-    axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {price: parseInt(value)})
+    price = parseInt(price);
+    axios.patch(`http://steamify-api.61hub.com/v1/games/${appId}`, {price})
       .then(response => this.setState({serverStatus: "success"}))
       .catch(response => this.setState({serverStatus: "error"}));
-    const clonedGames = [...this.props.games];
-    const elementToUpdatePrice = clonedGames.find((element) => element.appId == appid);
-    const indexElToUpdatePrice = clonedGames.findIndex((element) => element.appId == appid);
-    const updated = {...elementToUpdatePrice};
-    updated.price = parseInt(value);
-    clonedGames[indexElToUpdatePrice] = updated;
-    this.props.dispatchGamesToStore(clonedGames);
+
+    this.props.gameUpdate({appId, price});
   };
 
   saveDataDlc = (appid, nameValue, priceValue) => {
@@ -164,8 +160,15 @@ class App extends Component {
             {_.orderBy(this.props.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
               .filter((el) => el.hidden != true)
               .map((el, index) =>
-                <Game key={el.appId} data={el} index={index} saveData={this.saveData} saveDataDlc={this.saveDataDlc}
-                packages={this.props.games.filter((el) => el.items)} packId={this.state.packId}
+                <Game
+                  key={el.appId}
+                  data={el}
+                  index={index}
+                  saveData={this.saveData}
+                  saveDataDlc={this.saveDataDlc}
+                  packages={this.props.games.filter((el) => el.items)}
+                  packId={this.state.packId}
+                  onAddedToPack={this.fetchGamesData}
                 />
               )}
           </div>
@@ -182,6 +185,20 @@ export default connect(
   }),
   (dispatch) => {
     return {
+      dataFetched (data) {
+        dispatch({
+          type: 'dataFetched',
+          data
+        })
+      },
+
+      gameUpdate (game) {
+        dispatch({
+          type: 'gameUpdate',
+          game
+        })
+      },
+
       dispatchGamesToStore (data) {
         dispatch({
           data: data,

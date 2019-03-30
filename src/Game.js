@@ -70,8 +70,13 @@ class Game extends Component {
     const packId = this.selectRef.current.options[this.selectRef.current.selectedIndex].value;
     const foundPack = this.props.packages.find((el) => el.packId == packId);
 
-    axios.patch(`http://steamify-api.61hub.com/v1/packs/${packId}`, {items: [...foundPack.items, appId]});
-    this.hideGame(appId);
+    axios.patch(`http://steamify-api.61hub.com/v1/packs/${packId}`, {items: [...foundPack.items, appId]})
+      .then(() => {
+        this.props.onAddedToPack();
+        this.hideGame(appId);
+
+      })
+
   };
 
 
