@@ -19,8 +19,19 @@ const countPriceHour = (game) => {
 };
 
 const formatPlaytime = (minutes) => {
-  const hrs = Math.round(minutes / 60);
-  const mins = minutes % 60;
+  const hrs = Math.floor(minutes / 60);
+  let mins = minutes % 60;
+  if (mins > 10) {
+    mins.toString().length < 2 ? mins = mins * 10 : void(0);
+  }
+
+  if (!hrs) {
+    return `${mins}m`;
+  }
+
+  if (!mins) {
+    return `${hrs}h`;
+  }
 
   return `${hrs}h ${mins}m`;
 };
