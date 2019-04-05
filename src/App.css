@@ -1,10 +1,9 @@
 
 body {
   background: #131B25;
-  height: 100%;
   font-family: Lato, sans-serif;
-  color: white;
 }
+
 input {
   color: white;
 }
@@ -26,9 +25,6 @@ input {
   width: 20px;
   overflow: hidden;
   background: green;
-  position: fixed;
-  top: 5px;
-  left: 100px;
 }
 .loadingState.loading {
   background-color: yellow;
@@ -61,8 +57,6 @@ input {
 .gameHourPrice.yellow {
   background-color: yellow;
 }
-.gameHourPriceWrapper {
-}
 
 .gameWrapper.hidden {
   display: none;
@@ -74,23 +68,12 @@ input {
 .mainWrapper {
   width: 60%;
   margin: 0 auto;
-  padding-top: 100px;
+  padding-top: 25px;
 }
 .gameIcon {
   width: 184px;
   height: 69px;
   background: linear-gradient(45deg, rgb(59, 59, 59) 0%, rgba(0,0,0,1) 100%);;
-}
-
-.menu {
-  position: fixed;
-}
-.packageWrapper {
-  text-align: center;
-}
-.packageWrapper form > * {
-  margin-right: 10px;
-  color: black;
 }
 
 .gameWrapper {
@@ -99,6 +82,7 @@ input {
   background: #0F151C;
   margin-bottom: 15px;
   padding-right: 15px;
+  color: white;
 }
 
 .gameInformation {
@@ -158,4 +142,18 @@ input {
 
 .packWrapper > div :first-child {
   flex-grow: 1;
+}
+
+.controls {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
+
+.controls > * {
+  margin-top: 10px;
+}
+
+.twoWeeks {
+  width: 50%;
 }

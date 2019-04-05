@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "http://steamify.61hub.com",
   "dependencies": {
+    "@blueprintjs/core": "^3.15.0",
     "axios": "^0.18.0",
     "date-fns": "^1.30.1",
     "lodash": "^4.17.11",
@@ -12,7 +13,8 @@
     "react-dom": "^16.6.3",
     "react-redux": "^6.0.0",
     "react-scripts": "2.1.1",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",

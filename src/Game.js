@@ -17,7 +17,7 @@ class Game extends Component {
   }
 
   handleInputSubmit = (event, appid) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       this.props.saveData(appid, this.state.value);
     } else {
       this.setState({value: event.target.value});
@@ -25,9 +25,8 @@ class Game extends Component {
   };
 
   handleDlc = (event, appid) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       this.props.saveDataDlc(appid, this.dlcNameRef.current.value, this.dlcPriceRef.current.value)
-      // console.log(this.dlcNameRef.current.value)
     }
   };
 
@@ -66,7 +65,6 @@ class Game extends Component {
   patchSubmitedData = (appId, e) => {
     e.preventDefault();
     const stringAppid = appId.toString();
-    console.log(stringAppid);
     const packId = this.selectRef.current.options[this.selectRef.current.selectedIndex].value;
     const foundPack = this.props.packages.find((el) => el.packId == packId);
 
@@ -74,20 +72,17 @@ class Game extends Component {
       .then(() => {
         this.props.onAddedToPack();
         this.hideGame(appId);
-
       })
-
   };
 
 
   render() {
     const {data} = this.props;
+    const totalPrice = getTotalPrice(data);
 
-    let totalPrice = getTotalPrice(data);
     return (
       <>
         <div className={`gameWrapper ${this.state.hidden ? "hidden" : ""}`}>
-
           <div className="gameIcon">
             <img src={data.logo}/>
           </div>
@@ -115,17 +110,14 @@ class Game extends Component {
             <button onClick={() => this.hideGame(data.appId)}>Hide</button>
           </div>
           <div className="dropDownPacks">
-            <form onSubmit={(e) => this.patchSubmitedData(data.appId, e)}>
-              <select ref={this.selectRef}>
-
-                {data.items ? null : this.props.packages.map((pack) => <option
-                  value={pack.packId}>{pack.name}</option>)}
-
-
-              </select>
-              <button>Package</button>
-            </form>
-
+            {data.type !== 'pack' &&
+              <form onSubmit={e => this.patchSubmitedData(data.appId, e)}>
+                <select ref={this.selectRef}>
+                  {this.props.packages && this.props.packages.map(pack => <option value={pack.packId}>{pack.name}</option>)}
+                </select>
+                <button>Package</button>
+              </form>
+            }
           </div>
         </div>
 
@@ -133,11 +125,14 @@ class Game extends Component {
           {
             data.type === 'pack' ?
               <div className='packWrapper'>
-                {data.games.map((game) => <div><div>{game.name}</div> <div>{formatPlaytime(game.playtimeForever)}</div></div>)}
+                {data.games.map((game) => <div>
+                  <div>{game.name}</div>
+                  <div>{formatPlaytime(game.playtimeForever)}</div>
+                </div>)}
               </div>
               :
               <>
-                {data.dlc.map(el => <div className='dlc'>
+                {data.dlc && data.dlc.map(el => <div className='dlc'>
                   <div className='dlcName'>{el.name}</div>
                   <div>{el.price}</div>
                 </div>)}

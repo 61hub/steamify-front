@@ -1,10 +1,16 @@
 import React, {Component} from 'react';
-import './App.css';
 import axios from 'axios'
 import Game from "./Game"
 import {countPriceHour, getTotalPrice} from "./helpers"
 import * as _ from "lodash"
 import {connect} from "react-redux"
+import {fetchGames, fetchGamesAction, fetchPacks} from "./store";
+import {Drawer, Position, Classes, Button, RadioGroup, Radio} from '@blueprintjs/core';
+import "../node_modules/normalize.css/normalize.css";
+import "../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css";
+import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
+import './App.css';
+import {Stats} from "./Stats";
 
 class App extends Component {
   constructor(props) {
@@ -13,58 +19,22 @@ class App extends Component {
     this.formInputPriceRef = React.createRef();
 
     this.state = {
-      games: [],
       serverStatus: "",
-      gamePriceStatus: "",
       sortedBy: "playtimeForever",
       sortOrder: "desc",
-      packs: [],
+      isSettingsOpen: false,
+      isStatsOpen: false
     };
   }
 
-  fetchGamesData = () => {
-    axios.get(`http://steamify-api.61hub.com/v1/games`)
-      .then(response => {
-        const mappedData = response.data.map((el) => {
-          if (isNaN(parseInt(el.price))) {
-            el.price = 0
-          } else {
-            el.price = parseInt(el.price)
-          }
-          const pricePerHour = countPriceHour(el);
-          el.pricePerHour = pricePerHour;
-          return el
-        })
-        this.fetchPacksData(mappedData)
-      })
-  };
-
-  fetchPacksData = (gamesData) => {
-    axios.get(`http://steamify-api.61hub.com/v1/packs`)
-      .then(response => {
-        response.data.forEach((pack) => {
-          pack.games = [];
-          pack.type = 'pack';
-          pack.items.forEach((id) => {
-            const foundGame = gamesData.find((el) => {
-              return el.appId === parseInt(id)
-            });
-            pack.games.push(foundGame);
-          });
-
-          pack.playtimeForever = 0;
-          if (pack.games && pack.games.length) {
-            pack.games.forEach(g => pack.playtimeForever += g.playtimeForever);
-          }
-        });
-
-        this.props.dataFetched([...response.data, ...gamesData]);
-      })
-  };
-
   componentDidMount() {
-    this.fetchGamesData();
+    this.fetchData();
   }
+
+  fetchData = async () => {
+    await this.props.fetchGames();
+    await this.props.fetchPacks();
+  };
 
   saveData = (appId, price) => {
     this.setState({serverStatus: "loading"});
@@ -95,18 +65,8 @@ class App extends Component {
     const updated = {...elementToUpdatePrice};
     updated.dlc = [...updated.dlc, {name: nameValue, price: priceValue}];
     clonedGames[indexElToUpdatePrice] = updated;
-    // console.log(clonedGames[indexElToUpdatePrice]);
 
     this.props.dispatchGamesToStore(clonedGames);
-  };
-
-  handleSortClick = (type) => {
-    // console.log(type);
-    this.setState({sortedBy: type})
-  };
-
-  handleSortOrder = (type) => {
-    this.setState({sortOrder: type})
   };
 
   handleRefreshButton = () => {
@@ -121,57 +81,99 @@ class App extends Component {
   };
 
   render() {
-    let price = 0;
-    let playtimeForever = 0;
-    this.props.games.forEach((el) => {
-      if (!el.hidden) {
-        price = price + getTotalPrice(el);
-        playtimeForever = playtimeForever + el.playtimeForever;
-      }
-    });
+    const {games, packs} = this.props;
+
     return (
       <div className="container">
-        <div className="overlay">
-          <div className={`loadingState ${this.state.serverStatus}`}></div>
-          <div className="menu">
-            Sort by:
-            <div><input type="radio" name="sort" onChange={() => this.handleSortClick("price")}/>Price</div>
-            <div><input type="radio" name="sort" onChange={() => this.handleSortClick("playtimeForever")}/>Hours</div>
-            <div><input type="radio" name="sort" onChange={() => this.handleSortClick("pricePerHour")}/>Price per hour
-            </div>
-            <div><input type="radio" name="order" onChange={() => this.handleSortOrder("asc")}/>Asc</div>
-            <div><input type="radio" name="order" onChange={() => this.handleSortOrder("desc")}/>Desc</div>
-            <div>{`Total price: ${price}P`}</div>
-            <div>{`Total playtime: ${Math.round(playtimeForever / 60)}hrs`}</div>
-            <div onClick={this.handleRefreshButton}>
-              <button>Refresh</button>
-            </div>
-          </div>
-          <div className="packageWrapper">
-            <form onSubmit={this.addPack}>
-              <input type="text" placeholder="Package name" ref={this.formInputNameRef}/>
-              <input type="number" placeholder="Package price" ref={this.formInputPriceRef}/>
-              <button>Сохранить</button>
-            </form>
-          </div>
+        <div className="controls">
+          <Button className="bp3-minimal" onClick={() => this.setState({isSettingsOpen: true})}
+                  icon="settings"/>
+          <Button className="bp3-minimal" onClick={() => this.setState({isStatsOpen: true})}
+                  icon="grouped-bar-chart"/>
+        </div>
 
-          <div className="mainWrapper">
+        <Drawer
+          isOpen={this.state.isSettingsOpen}
+          onClose={() => this.setState({isSettingsOpen: false})}
+          autoFocus={true}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          enforceFocus={true}
+          hasBackdrop={true}
+          position={Position.RIGHT}
+          usePortal={true}
+          size={Drawer.SIZE_SMALL}
+        >
+          <div className={Classes.DRAWER_BODY}>
+            <div className={Classes.DIALOG_BODY}>
+              <div className={`loadingState ${this.state.serverStatus}`}/>
 
-            {_.orderBy(this.props.games, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
-              .filter((el) => el.hidden != true)
-              .map((el, index) =>
-                <Game
-                  key={el.appId}
-                  data={el}
-                  index={index}
-                  saveData={this.saveData}
-                  saveDataDlc={this.saveDataDlc}
-                  packages={this.props.games.filter((el) => el.items)}
-                  packId={this.state.packId}
-                  onAddedToPack={this.fetchGamesData}
-                />
-              )}
+              <RadioGroup
+                label="Sort by:"
+                onChange={e => this.setState({sortedBy: e.currentTarget.value})}
+                selectedValue={this.state.sortedBy}
+              >
+                <Radio label="Price" value="price"/>
+                <Radio label="Hours" value="playtimeForever"/>
+                <Radio label="Price per hour" value="pricePerHour"/>
+              </RadioGroup>
+
+              <RadioGroup
+                label="Order:"
+                onChange={e => this.setState({sortOrder: e.currentTarget.value})}
+                selectedValue={this.state.sortOrder}
+              >
+                <Radio label="Asc" value="asc"/>
+                <Radio label="Desc" value="desc"/>
+              </RadioGroup>
+              <form onSubmit={this.addPack}>
+                <input type="text" placeholder="Package name" ref={this.formInputNameRef}/>
+                <input type="number" placeholder="Package price" ref={this.formInputPriceRef}/>
+                <button>Сохранить</button>
+              </form>
+
+            </div>
           </div>
+          <div className={Classes.DRAWER_FOOTER}>
+            <Button onClick={this.fetchData} icon="refresh"/>
+          </div>
+        </Drawer>
+
+        <Drawer
+          isOpen={this.state.isStatsOpen}
+          onClose={() => this.setState({isStatsOpen: false})}
+          autoFocus={true}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          enforceFocus={true}
+          hasBackdrop={true}
+          position={Position.RIGHT}
+          usePortal={true}
+          size={Drawer.SIZE_LARGE}
+        >
+          <div className={Classes.DRAWER_BODY}>
+            <div className={Classes.DIALOG_BODY}>
+              <Stats games={[...this.props.games]} packs={[...this.props.packs]} />
+            </div>
+          </div>
+        </Drawer>
+
+        <div className="mainWrapper">
+
+          {_.orderBy([...packs, ...games], [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
+            .filter(el => !el.hidden)
+            .map((el, index) =>
+              <Game
+                key={el.appId}
+                data={el}
+                index={index}
+                saveData={this.saveData}
+                saveDataDlc={this.saveDataDlc}
+                packages={this.props.games.filter((el) => el.items)}
+                packId={this.state.packId}
+                onAddedToPack={this.fetchGamesData}
+              />
+            )}
         </div>
       </div>
 
@@ -181,41 +183,30 @@ class App extends Component {
 
 export default connect(
   (state) => ({
-    games: state.games
+    games: state.games,
+    packs: state.packs
   }),
   (dispatch) => {
     return {
-      dataFetched (data) {
-        dispatch({
-          type: 'dataFetched',
-          data
-        })
+      fetchGames() {
+        return dispatch(fetchGames())
       },
 
-      gameUpdate (game) {
+      fetchPacks() {
+        return dispatch(fetchPacks())
+      },
+
+      gameUpdate(game) {
         dispatch({
           type: 'gameUpdate',
           game
         })
       },
 
-      dispatchGamesToStore (data) {
+      dispatchGamesToStore(data) {
         dispatch({
           data: data,
           type: "gamesToStore"
-        })
-      },
-      dispatchPacksToStore (packs) {
-        dispatch({
-          packs: packs,
-          type: "packsToStore"
-        })
-      },
-      dispatchNewItems (items, packId) {
-        dispatch({
-          packId: packId,
-          item: items,
-          type: "newItem"
         })
       }
     }
