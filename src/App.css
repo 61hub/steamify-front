@@ -157,3 +157,16 @@ input {
 .twoWeeks {
   width: 50%;
 }
+
+section.react-trello-board {
+}
+
+section.react-trello-board > div {
+  width: 200px;
+  max-width: 200px;
+  min-width: 200px;
+}
+
+article.react-trello-board {
+  min-width: 160px;
+}

@@ -11,6 +11,7 @@ import "../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 import './App.css';
 import {Stats} from "./Stats";
+import {Board} from "react-trello";
 
 class App extends Component {
   constructor(props) {
@@ -83,6 +84,39 @@ class App extends Component {
   render() {
     const {games, packs} = this.props;
 
+    const data = {
+      lanes: [
+        {
+          id: 'rest',
+          title: 'Rest',
+          label: '2/2',
+          cards: []
+        },
+        {
+          id: 'wannaPlay',
+          title: 'Wanna play',
+          label: '0/0',
+          cards: []
+        },
+        {
+          id: 'playing',
+          title: 'Playing',
+          label: '0/0',
+          cards: []
+        },
+        {
+          id: 'completed',
+          title: 'Completed',
+          label: '0/0',
+          cards: []
+        }
+      ]
+    };
+
+    if (games.length) {
+      data.lanes[0].cards = [...games, ...packs].map(item => ({id: item.appId, data: item}));
+    }
+
     return (
       <div className="container">
         <div className="controls">
@@ -91,6 +125,10 @@ class App extends Component {
           <Button className="bp3-minimal" onClick={() => this.setState({isStatsOpen: true})}
                   icon="grouped-bar-chart"/>
         </div>
+
+        <Board data={data} customCardLayout draggable >
+          <Game mode='card' />
+        </Board>
 
         <Drawer
           isOpen={this.state.isSettingsOpen}

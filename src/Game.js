@@ -1,6 +1,13 @@
 import React, {Component} from "react"
 import {countPriceHour, formatPlaytime, getTotalPrice} from "./helpers"
 import axios from 'axios'
+import styled from 'styled-components'
+
+const GameCard$ = styled.div`
+  img {
+  width: 100%;
+  }
+`;
 
 
 class Game extends Component {
@@ -11,7 +18,6 @@ class Game extends Component {
     this.selectRef = React.createRef();
     this.state = {
       value: "",
-      hidden: props.data.hidden,
       dlcClassName: "dlcWrapperHidden"
     }
   }
@@ -47,7 +53,7 @@ class Game extends Component {
   };
 
   hideGame = (appId) => {
-    // console.log(appId);
+    // TODO do it through redux
     this.setState({gameClassName: "hide", hidden: true}, () => {
       axios.patch(`http://steamify-api.61hub.com/v1/games/${appId}`, {hidden: this.state.hidden});
     });
@@ -77,28 +83,49 @@ class Game extends Component {
 
 
   render() {
-    const {data} = this.props;
+    const { data } = this.props;
+    const { mode = "line" } = this.props;
     const totalPrice = getTotalPrice(data);
 
     return (
       <>
-        <div className={`gameWrapper ${this.state.hidden ? "hidden" : ""}`}>
-          <div className="gameIcon">
-            <img src={data.logo}/>
-          </div>
-
-          <div className='gameInformation'>
-            <div className="gameName" onClick={e => this.openDlc(e)}>{data.name}</div>
-            <div className="gameMinorInfo">
-              <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`}></div>
-              <div className='gameIndex'>#{this.props.index + 1}</div>
-              <div className='gameTotalPrice'>{totalPrice}P</div>
+        { mode === 'line' ?
+          <div className="gameWrapper">
+            <div className="gameIcon">
+              <img src={data.logo}/>
             </div>
+
+            <div className='gameInformation'>
+              <div className="gameName" onClick={e => this.openDlc(e)}>{data.name}</div>
+              <div className="gameMinorInfo">
+                <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`}></div>
+                <div className='gameIndex'>#{this.props.index + 1}</div>
+                <div className='gameTotalPrice'>{totalPrice}P</div>
+              </div>
+            </div>
+
+
+            <div className="gameDuration">{formatPlaytime(data.playtimeForever)}</div>
           </div>
 
+          :
 
-          <div className="gameDuration">{formatPlaytime(data.playtimeForever)}</div>
-        </div>
+          <GameCard$>
+            <img src={data.logo}/>
+
+            <div>
+              <div className="gameName">{data.name}</div>
+              <div className="gameMinorInfo">
+                <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`}></div>
+                <div>{formatPlaytime(data.playtimeForever)}</div>
+
+              </div>
+            </div>
+
+
+          </GameCard$>
+        }
+
 
 
         <div className={`${this.state.dlcClassName} options`}>
