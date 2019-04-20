@@ -7,13 +7,26 @@ const countPriceHour = (game) => {
     })
   }
 
+  if (game.type === 'pack') {
+    let itemsTotalTime = 0;
+
+    console.log(game.games)
+    game.games.forEach(g => itemsTotalTime = itemsTotalTime + g.playtimeForever);
+    if (itemsTotalTime <= 60) {
+      return game.price;
+    } else {
+      console.log(game.price, itemsTotalTime / 60)
+      return Math.round((game.price / itemsTotalTime / 60));
+    }
+  }
+
   let priceHour;
   if (game.playtimeForever <= 60) {
     priceHour = game.price + dlcPrice;
     return priceHour
   } else {
     let playTimeInHours = game.playtimeForever / 60;
-    priceHour = Math.round((game.price  + dlcPrice) / playTimeInHours);
+    priceHour = (game.price  + dlcPrice) / playTimeInHours;
     return priceHour
   }
 };

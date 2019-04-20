@@ -90,6 +90,7 @@ class App extends Component {
                   icon="settings"/>
           <Button className="bp3-minimal" onClick={() => this.setState({isStatsOpen: true})}
                   icon="grouped-bar-chart"/>
+          <Button className='bp3-minimal' onClick={this.fetchData} icon="refresh"/>
         </div>
 
         <Drawer
@@ -133,9 +134,6 @@ class App extends Component {
               </form>
 
             </div>
-          </div>
-          <div className={Classes.DRAWER_FOOTER}>
-            <Button onClick={this.fetchData} icon="refresh"/>
           </div>
         </Drawer>
 

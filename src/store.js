@@ -74,6 +74,7 @@ const gamesReducer = (state, action) => {
         if (pack.games && pack.games.length) {
           pack.games.forEach(g => pack.playtimeForever += g.playtimeForever);
           pack.logo = pack.games[Math.floor(Math.random() * (pack.games.length - 1))].logo;
+          pack.pricePerHour = countPriceHour(pack);
         }
       });
 
