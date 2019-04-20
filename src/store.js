@@ -1,7 +1,7 @@
 import {createStore, compose, applyMiddleware} from "redux"
 import thunk from "redux-thunk";
 import axios from "axios";
-import {countPriceHour} from "./helpers";
+import {countPriceHour, getTotalPrice} from "./helpers";
 
 const actionTypes = {
   packsFetched: 'packsFetched',
@@ -50,6 +50,7 @@ const gamesReducer = (state, action) => {
           game.price = parseInt(game.price)
         }
         game.pricePerHour = countPriceHour(game);
+        game.totalPrice = getTotalPrice(game);
       });
 
       return {
@@ -76,6 +77,7 @@ const gamesReducer = (state, action) => {
           pack.logo = pack.games[Math.floor(Math.random() * (pack.games.length - 1))].logo;
           pack.pricePerHour = countPriceHour(pack);
         }
+        pack.totalPrice = pack.price
       });
 
       return {

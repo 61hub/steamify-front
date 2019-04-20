@@ -114,7 +114,7 @@ class App extends Component {
                 onChange={e => this.setState({sortedBy: e.currentTarget.value})}
                 selectedValue={this.state.sortedBy}
               >
-                <Radio label="Price" value="price"/>
+                <Radio label="Price" value="totalPrice"/>
                 <Radio label="Hours" value="playtimeForever"/>
                 <Radio label="Price per hour" value="pricePerHour"/>
               </RadioGroup>

@@ -78,7 +78,6 @@ class Game extends Component {
 
   render() {
     const {data} = this.props;
-    const totalPrice = getTotalPrice(data);
 
     return (
       <>
@@ -92,7 +91,7 @@ class Game extends Component {
             <div className="gameMinorInfo">
               <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`}></div>
               <div className='gameIndex'>#{this.props.index + 1}</div>
-              <div className='gameTotalPrice'>{totalPrice}P</div>
+              <div className='gameTotalPrice'>{data.totalPrice}P</div>
             </div>
           </div>
 
