@@ -11,6 +11,7 @@ import "../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 import './App.css';
 import {Stats} from "./Stats";
+import Settings from "./components/Settings";
 
 class App extends Component {
   constructor(props) {
@@ -93,49 +94,18 @@ class App extends Component {
           <Button className='bp3-minimal' onClick={this.fetchData} icon="refresh"/>
         </div>
 
-        <Drawer
+        <Settings
           isOpen={this.state.isSettingsOpen}
           onClose={() => this.setState({isSettingsOpen: false})}
-          autoFocus={true}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
-          enforceFocus={true}
-          hasBackdrop={true}
-          position={Position.RIGHT}
-          usePortal={true}
-          size={Drawer.SIZE_SMALL}
-        >
-          <div className={Classes.DRAWER_BODY}>
-            <div className={Classes.DIALOG_BODY}>
-              <div className={`loadingState ${this.state.serverStatus}`}/>
-
-              <RadioGroup
-                label="Sort by:"
-                onChange={e => this.setState({sortedBy: e.currentTarget.value})}
-                selectedValue={this.state.sortedBy}
-              >
-                <Radio label="Price" value="totalPrice"/>
-                <Radio label="Hours" value="playtimeForever"/>
-                <Radio label="Price per hour" value="pricePerHour"/>
-              </RadioGroup>
-
-              <RadioGroup
-                label="Order:"
-                onChange={e => this.setState({sortOrder: e.currentTarget.value})}
-                selectedValue={this.state.sortOrder}
-              >
-                <Radio label="Asc" value="asc"/>
-                <Radio label="Desc" value="desc"/>
-              </RadioGroup>
-              <form onSubmit={this.addPack}>
-                <input type="text" placeholder="Package name" ref={this.formInputNameRef}/>
-                <input type="number" placeholder="Package price" ref={this.formInputPriceRef}/>
-                <button>Сохранить</button>
-              </form>
-
-            </div>
-          </div>
-        </Drawer>
+          serverStatus={this.state.serverStatus}
+          onSortChange={e => this.setState({sortedBy: e.currentTarget.value})}
+          sortedBy={this.state.sortedBy}
+          sortOrder={this.state.sortOrder}
+          onSortOrderChange={e => this.setState({sortOrder: e.currentTarget.value})}
+          addPack={this.addPack}
+          formInputNameRef={this.formInputNameRef}
+          formInputPriceRef={this.formInputPriceRef}
+        />
 
         <Drawer
           isOpen={this.state.isStatsOpen}
