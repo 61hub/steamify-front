@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import Game from "./Game"
+import Game from "./components/Game"
 import * as _ from "lodash"
 import { connect } from "react-redux"
 import { Drawer, Position, Classes, Button, RadioGroup, Radio } from '@blueprintjs/core';
@@ -8,7 +8,7 @@ import "../node_modules/normalize.css/normalize.css";
 import "../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 import './App.css';
-import { Stats } from "./Stats";
+import { Stats } from "./components/Stats";
 import Settings from "./components/Settings";
 import { fetchGames } from "./redux/actions/games";
 import { fetchPacks } from "./redux/actions/packs";

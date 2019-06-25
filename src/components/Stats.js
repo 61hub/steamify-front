@@ -1,5 +1,5 @@
 import React from 'react'
-import {formatPlaytime, getTotalPrice} from "./helpers";
+import {formatPlaytime, getTotalPrice} from "../helpers";
 import Game from "./Game";
 
 export const Stats = ({ games, packs }) => {

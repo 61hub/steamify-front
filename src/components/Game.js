@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import {countPriceHour, formatPlaytime, getTotalPrice} from "./helpers"
+import {countPriceHour, formatPlaytime, getTotalPrice} from "../helpers"
 import axios from 'axios'
 
 
