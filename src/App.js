@@ -70,19 +70,12 @@ class App extends Component {
     this.props.dispatchGamesToStore(clonedGames);
   };
 
-  handleRefreshButton = () => {
-    this.fetchGamesData();
-  };
-
-  addPack = (e) => {
-    e.preventDefault();
-    const inputName = this.formInputNameRef.current.value;
-    const inputPrice = this.formInputPriceRef.current.value;
-    axios.post(`http://steamify-api.61hub.com/v1/packs`, {name: inputName, price: inputPrice})
+  addPack = ({ packName, packPrice }) => {
+    axios.post(`http://steamify-api.61hub.com/v1/packs`, {name: packName, price: packPrice})
   };
 
   render() {
-    const {games, packs} = this.props;
+    const { games, packs } = this.props;
 
     return (
       <div className="container">

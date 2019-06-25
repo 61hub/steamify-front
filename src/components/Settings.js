@@ -1,7 +1,8 @@
 import React from 'react'
-import {Classes, Drawer, Position, Radio, RadioGroup} from "@blueprintjs/core";
+import { Classes, Drawer, Position, Radio, RadioGroup } from "@blueprintjs/core";
+import { Field, Form } from "react-final-form";
 
-const Settings = ({ isOpen, onClose, serverStatus, onSortChange, sortedBy, sortOrder, onSortOrderChange, addPack, formInputNameRef, formInputPriceRef }) => {
+const Settings = ({ isOpen, onClose, serverStatus, onSortChange, sortedBy, sortOrder, onSortOrderChange, addPack }) => {
   return (
     <Drawer
       isOpen={isOpen}
@@ -37,16 +38,20 @@ const Settings = ({ isOpen, onClose, serverStatus, onSortChange, sortedBy, sortO
             <Radio label="Asc" value="asc"/>
             <Radio label="Desc" value="desc"/>
           </RadioGroup>
-          <form onSubmit={addPack}>
-            <input type="text" placeholder="Package name" ref={formInputNameRef}/>
-            <input type="number" placeholder="Package price" ref={formInputPriceRef}/>
-            <button>Сохранить</button>
-          </form>
-
+          <Form
+            onSubmit={addPack}
+            render={({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <Field name="packName" component="input" type="text" placeholder="Package name"/>
+                <Field name="packPrice" component="input" type="number" placeholder="Package price"/>
+                <button type="submit">Сохранить</button>
+              </form>
+            )}
+          />
         </div>
       </div>
     </Drawer>
   )
-}
+};
 
 export default Settings
