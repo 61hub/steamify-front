@@ -14,19 +14,13 @@ import {Stats} from "./Stats";
 import Settings from "./components/Settings";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.formInputNameRef = React.createRef();
-    this.formInputPriceRef = React.createRef();
-
-    this.state = {
-      serverStatus: "",
-      sortedBy: "playtimeForever",
-      sortOrder: "desc",
-      isSettingsOpen: false,
-      isStatsOpen: false
-    };
-  }
+  state = {
+    serverStatus: "",
+    sortedBy: "playtimeForever",
+    sortOrder: "desc",
+    isSettingsOpen: false,
+    isStatsOpen: false
+  };
 
   componentDidMount() {
     this.fetchData();
@@ -96,8 +90,6 @@ class App extends Component {
           sortOrder={this.state.sortOrder}
           onSortOrderChange={e => this.setState({sortOrder: e.currentTarget.value})}
           addPack={this.addPack}
-          formInputNameRef={this.formInputNameRef}
-          formInputPriceRef={this.formInputPriceRef}
         />
 
         <Drawer
@@ -143,10 +135,7 @@ class App extends Component {
 }
 
 export default connect(
-  (state) => ({
-    games: state.games,
-    packs: state.packs
-  }),
+  ({games, packs}) => ({games, packs}),
   (dispatch) => {
     return {
       fetchGames() {
