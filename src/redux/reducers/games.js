@@ -1,48 +1,10 @@
-import {createStore, compose, applyMiddleware} from "redux"
-import thunk from "redux-thunk";
-import axios from "axios";
-import {countPriceHour, getTotalPrice} from "./helpers";
+import { countPriceHour, getTotalPrice } from "../../helpers";
+import { gamesActionsTypes } from "../actions/games";
+import { packsActionsTypes } from "../actions/packs";
 
-const actionTypes = {
-  packsFetched: 'packsFetched',
-  gamesFetched: 'gamesFetched',
-  fetchGames: 'fetchGamesRequest'
-};
-
-export const fetchGamesAction = () => ({
-  type: actionTypes.fetchGames
-});
-
-export const packsFetched = (packs) => ({
-  type: actionTypes.packsFetched,
-  packs
-});
-
-export const gamesFetched = (games) => ({
-  type: actionTypes.gamesFetched,
-  games
-});
-
-
-export const fetchPacks = () => (
-  (dispatch) => (
-    axios
-      .get(`http://steamify-api.61hub.com/v1/packs`)
-      .then(response => dispatch(packsFetched(response.data)))
-  )
-);
-
-export const fetchGames = () => (
-  (dispatch) => (
-    axios
-      .get(`http://steamify-api.61hub.com/v1/games`)
-      .then(response => dispatch(gamesFetched(response.data)))
-  )
-);
-
-const gamesReducer = (state, action) => {
+export const gamesReducer = (state, action) => {
   switch (action.type) {
-    case actionTypes.gamesFetched:
+    case gamesActionsTypes.fetchGamesSuccess:
       action.games.forEach(game => {
         if (isNaN(parseInt(game.price))) {
           game.price = 0
@@ -58,7 +20,7 @@ const gamesReducer = (state, action) => {
         games: action.games
       };
 
-    case actionTypes.packsFetched:
+    case packsActionsTypes.fetchPacksSuccess:
       const {packs} = action
 
       packs.forEach(pack => {
@@ -83,12 +45,6 @@ const gamesReducer = (state, action) => {
       return {
         ...state,
         packs
-      };
-
-    case 'dataFetched':
-      return {
-        ...state,
-        games: action.data
       };
 
     case 'gamesToStore':
@@ -121,13 +77,3 @@ const gamesReducer = (state, action) => {
     packs: []
   }
 };
-
-const store = createStore(
-  gamesReducer,
-  compose(
-    applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
-);
-
-export default store
