@@ -157,3 +157,21 @@ body {
 .twoWeeks {
   width: 50%;
 }
+
+@media all and (max-width: 500px) {
+  .mainWrapper {
+    width: 95%;
+  }
+
+  .controls {
+    position: fixed;
+  }
+
+  .gameName {
+    font-size: 16px;
+  }
+
+  .gameDuration {
+    font-size: 22px;
+  }
+}
