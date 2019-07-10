@@ -1,0 +1,29 @@
+.gameWrapper {
+  display: flex;
+  align-items: center;
+  background: #0F151C;
+  margin-bottom: 15px;
+  padding-right: 15px;
+  color: white;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.gameIcon {
+  width: 184px;
+  height: 69px;
+  background: linear-gradient(45deg, rgb(59, 59, 59) 0%, rgba(0,0,0,1) 100%);;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  padding: 20px 10px;
+}
+
+.white {
+  color: white;
+}

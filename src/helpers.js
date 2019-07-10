@@ -10,12 +10,10 @@ const countPriceHour = (game) => {
   if (game.type === 'pack') {
     let itemsTotalTime = 0;
 
-    console.log(game.games)
     game.games.forEach(g => itemsTotalTime = itemsTotalTime + g.playtimeForever);
     if (itemsTotalTime <= 60) {
       return game.price;
     } else {
-      console.log(game.price, itemsTotalTime / 60)
       return Math.round((game.price / itemsTotalTime / 60));
     }
   }

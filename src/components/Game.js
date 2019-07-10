@@ -1,7 +1,9 @@
 import React, {Component} from "react"
 import {countPriceHour, formatPlaytime, getTotalPrice} from "../helpers"
 import axios from 'axios'
-
+import styles from './Game.module.scss'
+import classNames from 'classnames'
+import * as _ from 'lodash'
 
 class Game extends Component {
   constructor(props) {
@@ -12,7 +14,7 @@ class Game extends Component {
     this.state = {
       value: "",
       hidden: props.data.hidden,
-      dlcClassName: "dlcWrapperHidden"
+      isExpanded: false
     }
   }
 
@@ -32,7 +34,6 @@ class Game extends Component {
 
   definePriceHourClassName = (el) => {
     let priceHour = countPriceHour(el);
-    // console.log(priceHour);
     if (priceHour <= 10) {
       return "darkGreen"
     } else if (priceHour <= 50) {
@@ -47,19 +48,13 @@ class Game extends Component {
   };
 
   hideGame = (appId) => {
-    // console.log(appId);
     this.setState({gameClassName: "hide", hidden: true}, () => {
       axios.patch(`http://steamify-api.61hub.com/v1/games/${appId}`, {hidden: this.state.hidden});
     });
-
   };
 
-  openDlc = (e) => {
-    if (this.state.dlcClassName == "dlcWrapper") {
-      this.setState({dlcClassName: "dlcWrapperHidden"})
-    } else {
-      this.setState({dlcClassName: "dlcWrapper"})
-    }
+  toggleOptions = () => {
+    this.setState({isExpanded: !this.state.isExpanded})
   };
 
   patchSubmitedData = (appId, e) => {
@@ -75,19 +70,48 @@ class Game extends Component {
       })
   };
 
-
-  render() {
-    const {data} = this.props;
+  renderOptions = () => {
+    const { data } = this.props;
 
     return (
-      <>
-        <div className={`gameWrapper ${this.state.hidden ? "hidden" : ""}`}>
-          <div className="gameIcon">
-            <img src={data.logo}/>
+      <div className={styles.options}>
+        <div>
+          Item price:
+          <input className="priceInput" defaultValue={data.price} type="number"
+                 onKeyUp={(event) => this.handleInputSubmit(event, data.appId, data.playtimeForever)}/>
+        </div>
+        <div className="hideButton">
+          <button onClick={() => this.hideGame(data.appId)}>Hide</button>
+        </div>
+        <div className="dropDownPacks">
+          {data.type !== 'pack' &&
+          <form onSubmit={e => this.patchSubmitedData(data.appId, e)}>
+            <select ref={this.selectRef}>
+              {this.props.packages && this.props.packages.map(pack => <option value={pack.packId}>{pack.name}</option>)}
+            </select>
+            <button>Package</button>
+          </form>
+          }
+        </div>
+      </div>
+    )
+  };
+
+  render() {
+    const { data } = this.props;
+    const { hidden } = this.state;
+    const isPack = data.type === 'pack';
+    const items = isPack ? data.games : data.dlc;
+
+    return (
+      <div>
+        <div className={classNames(styles.gameWrapper, { [styles.hidden]: hidden })}>
+          <div className={styles.gameIcon}>
+            <img src={data.logo} alt="Image logo" />
           </div>
 
           <div className='gameInformation'>
-            <div className="gameName" onClick={e => this.openDlc(e)}>{data.name}</div>
+            <div className="gameName" onClick={this.toggleOptions}>{data.name}</div>
             <div className="gameMinorInfo">
               <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`}></div>
               <div className='gameIndex'>#{this.props.index + 1}</div>
@@ -95,46 +119,27 @@ class Game extends Component {
             </div>
           </div>
 
-
           <div className="gameDuration">{formatPlaytime(data.playtimeForever)}</div>
         </div>
 
+        <div className={classNames({dlcWrapperHidden: !this.state.isExpanded})}>
+          { this.renderOptions() }
 
-        <div className={`${this.state.dlcClassName} options`}>
-          <div>
-            <input className="priceInput" defaultValue={data.price} type="number"
-                   onKeyUp={(event) => this.handleInputSubmit(event, data.appId, data.playtimeForever)}/>
-          </div>
-          <div className="hideButton">
-            <button onClick={() => this.hideGame(data.appId)}>Hide</button>
-          </div>
-          <div className="dropDownPacks">
-            {data.type !== 'pack' &&
-              <form onSubmit={e => this.patchSubmitedData(data.appId, e)}>
-                <select ref={this.selectRef}>
-                  {this.props.packages && this.props.packages.map(pack => <option value={pack.packId}>{pack.name}</option>)}
-                </select>
-                <button>Package</button>
-              </form>
-            }
-          </div>
-        </div>
-
-        <div className={this.state.dlcClassName}>
-          {
-            data.type === 'pack' ?
-              <div className='packWrapper'>
-                {data.games.map((game) => <div>
-                  <div>{game.name}</div>
-                  <div>{formatPlaytime(game.playtimeForever)}</div>
-                </div>)}
-              </div>
-              :
-              <>
-                {data.dlc && data.dlc.map(el => <div className='dlc'>
-                  <div className='dlcName'>{el.name}</div>
+          <div className={styles.white}>
+            <h3>{isPack ? "Items in pack:" : "DLCs list:"}</h3>
+            {!_.isEmpty(items) && items.map(el => (
+              <div className='dlc'>
+                {el.name && <div className='dlcName'>{el.name}</div>}
+                {isPack ?
+                  <div>{formatPlaytime(el.playtimeForever)}</div>
+                  :
                   <div>{el.price}</div>
-                </div>)}
+                }
+              </div>
+          ))}
+
+            {!isPack &&
+              <>
                 <div>
                   <input className="dlcInput" placeholder="DLC name" type="text"
                          onKeyUp={(event) => this.handleDlc(event, data.appId)} ref={this.dlcNameRef}/>
@@ -145,10 +150,10 @@ class Game extends Component {
                          onKeyUp={(event) => this.handleDlc(event, data.appId)} ref={this.dlcPriceRef}/>
                 </div>
               </>
-          }
+            }
+          </div>
         </div>
-
-      </>
+      </div>
     )
   }
 }
