@@ -3,7 +3,6 @@ import axios from "axios";
 export const gamesActionsTypes = {
   fetchGamesSuccess: 'FETCH_GAMES_SUCCESS',
   gameUpdate: 'gameUpdate',
-  gamesToStore: 'gamesToStore'
 };
 
 const fetchGamesSuccess = (games) => ({
@@ -24,7 +23,3 @@ export const gameUpdate = (game) => ({
   game
 });
 
-export const gamesToStore = (data) => ({
-  data,
-  type: gamesActionsTypes.gamesToStore
-});

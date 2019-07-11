@@ -5,10 +5,7 @@ export const gamesReducer = (state = [], action) => {
     case gamesActionsTypes.fetchGamesSuccess:
       return action.games;
 
-    case 'gamesToStore':
-      return [...state, ...action.data]
-
-    case 'gameUpdate':
+    case gamesActionsTypes.gameUpdate:
       return state.map(item => {
         if (item.appId === action.game.appId) {
           return {...item, ...action.game}

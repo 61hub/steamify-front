@@ -10,7 +10,7 @@ import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 import './App.css';
 import { Stats } from "./components/Stats";
 import Settings from "./components/Settings";
-import { fetchGames, gamesToStore, gameUpdate } from "./redux/actions/games";
+import { fetchGames, gameUpdate } from "./redux/actions/games";
 import { fetchPacks } from "./redux/actions/packs";
 import PropTypes from 'proptypes'
 import { getComposedGames, getComposedPacks } from "./redux/selectors";
@@ -140,7 +140,6 @@ App.propTypes = {
   fetchGames: PropTypes.func.isRequired,
   fetchPacks: PropTypes.func.isRequired,
   gameUpdate: PropTypes.func.isRequired,
-  gamesToStore: PropTypes.func.isRequired
 };
 
 App.defaultProps = {
@@ -153,5 +152,5 @@ export default connect(
     games: getComposedGames(state),
     packs: getComposedPacks(state)
   }),
-  { fetchGames, fetchPacks, gameUpdate, gamesToStore }
+  { fetchGames, fetchPacks, gameUpdate }
 )(App);

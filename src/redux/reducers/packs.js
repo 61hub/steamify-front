@@ -5,9 +5,6 @@ export const packsReducer = (state = [], action) => {
     case packsActionsTypes.fetchPacksSuccess:
       return action.packs;
 
-    case 'packsToStore':
-      return [...state, ...action.packs];
-
     default:
       return state
   }
