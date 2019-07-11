@@ -13,6 +13,7 @@ import Settings from "./components/Settings";
 import { fetchGames, gamesToStore, gameUpdate } from "./redux/actions/games";
 import { fetchPacks } from "./redux/actions/packs";
 import PropTypes from 'proptypes'
+import { getComposedGames, getComposedPacks } from "./redux/selectors";
 
 class App extends Component {
   state = {
@@ -148,6 +149,9 @@ App.defaultProps = {
 };
 
 export default connect(
-  ({ games, packs }) => ({ games, packs }),
+  (state) => ({
+    games: getComposedGames(state),
+    packs: getComposedPacks(state)
+  }),
   { fetchGames, fetchPacks, gameUpdate, gamesToStore }
 )(App);

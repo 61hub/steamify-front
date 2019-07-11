@@ -1,6 +1,6 @@
 import {createStore, compose, applyMiddleware} from "redux"
 import thunk from "redux-thunk";
-import { gamesReducer } from "./reducers/games";
+import reducers from "./reducers";
 
 const middlewares = window.__REDUX_DEVTOOLS_EXTENSION__ ? compose(
   applyMiddleware(thunk),
@@ -8,7 +8,7 @@ const middlewares = window.__REDUX_DEVTOOLS_EXTENSION__ ? compose(
 ) : applyMiddleware(thunk);
 
 const store = createStore(
-  gamesReducer,
+  reducers,
   middlewares
 );
 
