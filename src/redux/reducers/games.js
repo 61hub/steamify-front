@@ -2,7 +2,12 @@ import { countPriceHour, getTotalPrice } from "../../helpers";
 import { gamesActionsTypes } from "../actions/games";
 import { packsActionsTypes } from "../actions/packs";
 
-export const gamesReducer = (state, action) => {
+const defaultState = {
+  games: [],
+  packs: []
+};
+
+export const gamesReducer = (state = defaultState, action) => {
   switch (action.type) {
     case gamesActionsTypes.fetchGamesSuccess:
       action.games.forEach(game => {
@@ -54,7 +59,8 @@ export const gamesReducer = (state, action) => {
       };
 
     case 'gameUpdate':
-      const game = state.games.map(item => {
+      const games = state.games.map(item => {
+        console.log(action.game, action.game.appId)
         if (item.appId === action.game.appId) {
           return {...item, ...action.game}
         }
@@ -63,7 +69,7 @@ export const gamesReducer = (state, action) => {
 
       return {
         ...state,
-        games: game
+        games
       };
 
     case 'packsToStore':
@@ -71,9 +77,8 @@ export const gamesReducer = (state, action) => {
         ...state,
         games: [...state.games, ...action.packs]
       };
-  }
-  return {
-    games: [],
-    packs: []
+
+    default:
+      return state
   }
 };

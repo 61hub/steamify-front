@@ -17,14 +17,6 @@ class Game extends Component {
     }
   }
 
-  handleInputSubmit = (event, appid) => {
-    if (event.keyCode === 13) {
-      this.props.saveData(appid, this.state.value);
-    } else {
-      this.setState({value: event.target.value});
-    }
-  };
-
   definePriceHourClassName = (el) => {
     let priceHour = countPriceHour(el);
     if (priceHour <= 10) {
@@ -70,8 +62,15 @@ class Game extends Component {
       <div className={styles.options}>
         <div>
           Item price:
-          <input className="priceInput" defaultValue={data.price} type="number"
-                 onKeyUp={(event) => this.handleInputSubmit(event, data.appId, data.playtimeForever)}/>
+          <Form
+            onSubmit={(...props) => this.props.onPriceChange(data.appId, ...props)}
+            render={({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <Field name="price" initialValue={data.price} component="input" type="text" placeholder="DLC name"/>
+                <button type="submit">Сохранить</button>
+              </form>
+            )}
+          />
         </div>
         <div className="hideButton">
           <button onClick={() => this.hideGame(data.appId)}>Hide</button>
@@ -119,17 +118,22 @@ class Game extends Component {
           { this.renderOptions() }
 
           <div className={styles.items}>
-            <h3>{isPack ? "Items in pack:" : "DLCs list:"}</h3>
-            {!_.isEmpty(items) && items.map(el => (
-              <div className={styles.item}>
-                {el.name && <div>{el.name}</div>}
-                {isPack ?
-                  <div>{formatPlaytime(el.playtimeForever)}</div>
-                  :
-                  <div>{el.price}</div>
+            {!_.isEmpty(items) &&
+              <>
+                <h3>{isPack ? "Items in pack:" : "DLCs list:"}</h3>
+                {items.map(el => (
+                  <div className={styles.item}>
+                  {el.name && <div>{el.name}</div>}
+                  {isPack ?
+                    <div>{formatPlaytime(el.playtimeForever)}</div>
+                    :
+                    <div>{el.price}</div>
+                  }
+                  </div>
+                  ))
                 }
-              </div>
-          ))}
+              </>
+            }
 
             {!isPack &&
               <div className={styles.addDlcWrapper}>

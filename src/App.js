@@ -32,14 +32,16 @@ class App extends Component {
     await this.props.fetchPacks();
   };
 
-  saveData = (appId, price) => {
+  updateItemPrice = (appId, {price}) => {
     this.setState({ serverStatus: "loading" });
     price = parseInt(price);
     axios.patch(`http://steamify-api.61hub.com/v1/games/${appId}`, { price })
-      .then(response => this.setState({ serverStatus: "success" }))
+      .then(response => {
+        this.props.gameUpdate({appId, price});
+        this.setState({ serverStatus: "success" })
+      })
       .catch(response => this.setState({ serverStatus: "error" }));
 
-    this.props.gameUpdate({ appId, price });
   };
 
   addDlc = (appid, {dlcName, dlcPrice}) => {
@@ -116,7 +118,7 @@ class App extends Component {
                 key={el.appId}
                 data={el}
                 index={index}
-                saveData={this.saveData}
+                onPriceChange={this.updateItemPrice}
                 onAddDlcFormSubmit={this.addDlc}
                 packages={this.props.games.filter((el) => el.items)}
                 packId={this.state.packId}
