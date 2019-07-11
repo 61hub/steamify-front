@@ -2,6 +2,8 @@ import axios from "axios";
 
 export const gamesActionsTypes = {
   fetchGamesSuccess: 'FETCH_GAMES_SUCCESS',
+  gameUpdate: 'gameUpdate',
+  gamesToStore: 'gamesToStore'
 };
 
 const fetchGamesSuccess = (games) => ({
@@ -16,3 +18,13 @@ export const fetchGames = () => (
       .then(response => dispatch(fetchGamesSuccess(response.data)))
   )
 );
+
+export const gameUpdate = (game) => ({
+  type: gamesActionsTypes.gameUpdate,
+  game
+});
+
+export const gamesToStore = (data) => ({
+  data,
+  type: gamesActionsTypes.gamesToStore
+});

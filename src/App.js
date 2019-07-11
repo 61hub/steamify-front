@@ -10,8 +10,9 @@ import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 import './App.css';
 import { Stats } from "./components/Stats";
 import Settings from "./components/Settings";
-import { fetchGames } from "./redux/actions/games";
+import { fetchGames, gamesToStore, gameUpdate } from "./redux/actions/games";
 import { fetchPacks } from "./redux/actions/packs";
+import PropTypes from 'proptypes'
 
 class App extends Component {
   state = {
@@ -41,27 +42,22 @@ class App extends Component {
     this.props.gameUpdate({ appId, price });
   };
 
-  saveDataDlc = (appid, nameValue, priceValue) => {
-    const clonedGames = [...this.props.games];
-    const elementToUpdatePrice = clonedGames.find((element) => element.appId == appid);
+  addDlc = (appid, {dlcName, dlcPrice}) => {
+    const { games } = this.props;
+    const gameToUpdate = games.find(element => element.appId === appid);
 
     this.setState({ serverStatus: "loading" });
-    axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {
-      dlc: [...elementToUpdatePrice.dlc, {
-        name: nameValue,
-        price: priceValue
+    return axios.patch(`http://steamify-api.61hub.com/v1/games/${appid}`, {
+      dlc: [...gameToUpdate.dlc, {
+        name: dlcName,
+        price: dlcPrice
       }]
     })
-      .then(response => this.setState({ serverStatus: "success" }))
+      .then(response => {
+        this.props.gameUpdate(response.data);
+        this.setState({ serverStatus: "success" });
+      })
       .catch(response => this.setState({ serverStatus: "error" }));
-
-
-    const indexElToUpdatePrice = clonedGames.findIndex((element) => element.appId == appid);
-    const updated = { ...elementToUpdatePrice };
-    updated.dlc = [...updated.dlc, { name: nameValue, price: priceValue }];
-    clonedGames[indexElToUpdatePrice] = updated;
-
-    this.props.dispatchGamesToStore(clonedGames);
   };
 
   addPack = ({ packName, packPrice }) => {
@@ -121,10 +117,11 @@ class App extends Component {
                 data={el}
                 index={index}
                 saveData={this.saveData}
-                saveDataDlc={this.saveDataDlc}
+                onAddDlcFormSubmit={this.addDlc}
                 packages={this.props.games.filter((el) => el.items)}
                 packId={this.state.packId}
-                onAddedToPack={this.fetchGamesData}
+                // TODO
+                onAddedToPack={this.fetchData}
               />
             )}
         </div>
@@ -134,33 +131,21 @@ class App extends Component {
   }
 }
 
+App.propTypes = {
+  games: PropTypes.arrayOf(PropTypes.object),
+  packs: PropTypes.arrayOf(PropTypes.object),
+  fetchGames: PropTypes.func.isRequired,
+  fetchPacks: PropTypes.func.isRequired,
+  gameUpdate: PropTypes.func.isRequired,
+  gamesToStore: PropTypes.func.isRequired
+};
+
+App.defaultProps = {
+  games: [],
+  packs: [],
+};
+
 export default connect(
   ({ games, packs }) => ({ games, packs }),
-
-  (dispatch) => {
-    return {
-      fetchGames() {
-        return dispatch(fetchGames())
-      },
-
-      fetchPacks() {
-        return dispatch(fetchPacks())
-      },
-
-      gameUpdate(game) {
-        dispatch({
-          type: 'gameUpdate',
-          game
-        })
-      },
-
-      dispatchGamesToStore(data) {
-        dispatch({
-          data: data,
-          type: "gamesToStore"
-        })
-      }
-    }
-  }
+  { fetchGames, fetchPacks, gameUpdate, gamesToStore }
 )(App);
-

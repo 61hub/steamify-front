@@ -4,12 +4,11 @@ import axios from 'axios'
 import styles from './Game.module.scss'
 import classNames from 'classnames'
 import * as _ from 'lodash'
+import { Field, Form } from "react-final-form";
 
 class Game extends Component {
   constructor(props) {
     super(props);
-    this.dlcNameRef = React.createRef();
-    this.dlcPriceRef = React.createRef();
     this.selectRef = React.createRef();
     this.state = {
       value: "",
@@ -23,12 +22,6 @@ class Game extends Component {
       this.props.saveData(appid, this.state.value);
     } else {
       this.setState({value: event.target.value});
-    }
-  };
-
-  handleDlc = (event, appid) => {
-    if (event.keyCode === 13) {
-      this.props.saveDataDlc(appid, this.dlcNameRef.current.value, this.dlcPriceRef.current.value)
     }
   };
 
@@ -141,16 +134,18 @@ class Game extends Component {
             {!isPack &&
               <div className={styles.addDlcWrapper}>
                 <h3>Add DLC</h3>
-                <input
-                  placeholder="DLC name"
-                  type="text"
-                  onKeyUp={(event) => this.handleDlc(event, data.appId)}
-                  ref={this.dlcNameRef}/>
-                <input
-                  placeholder="DLC price"
-                  type="text"
-                  onKeyUp={(event) => this.handleDlc(event, data.appId)}
-                  ref={this.dlcPriceRef}/>
+
+                <Form
+                  onSubmit={(...props) => this.props.onAddDlcFormSubmit(data.appId, ...props)}
+                  render={({ handleSubmit, reset }) => (
+                    // TODO reset doesn't work
+                    <form onSubmit={(...rest) => handleSubmit(...rest).then(reset)}>
+                      <Field name="dlcName" component="input" type="text" placeholder="DLC name"/>
+                      <Field name="dlcPrice" component="input" type="number" placeholder="DLC price"/>
+                      <button type="submit">Сохранить</button>
+                    </form>
+                  )}
+                />
               </div>
             }
           </div>
