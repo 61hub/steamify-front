@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import Game from "./components/Game"
+import Game from "./components/Game/Game"
 import * as _ from "lodash"
 import { connect } from "react-redux"
 import { Drawer, Position, Classes, Button, RadioGroup, Radio } from '@blueprintjs/core';
@@ -136,6 +136,7 @@ class App extends Component {
 
 export default connect(
   ({ games, packs }) => ({ games, packs }),
+
   (dispatch) => {
     return {
       fetchGames() {

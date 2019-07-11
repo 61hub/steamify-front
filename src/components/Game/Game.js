@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import {countPriceHour, formatPlaytime, getTotalPrice} from "../helpers"
+import {countPriceHour, formatPlaytime, getTotalPrice} from "../../helpers"
 import axios from 'axios'
 import styles from './Game.module.scss'
 import classNames from 'classnames'
@@ -113,7 +113,7 @@ class Game extends Component {
           <div className='gameInformation'>
             <div className="gameName" onClick={this.toggleOptions}>{data.name}</div>
             <div className="gameMinorInfo">
-              <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`}></div>
+              <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`} />
               <div className='gameIndex'>#{this.props.index + 1}</div>
               <div className='gameTotalPrice'>{data.totalPrice}P</div>
             </div>
@@ -122,14 +122,14 @@ class Game extends Component {
           <div className="gameDuration">{formatPlaytime(data.playtimeForever)}</div>
         </div>
 
-        <div className={classNames({dlcWrapperHidden: !this.state.isExpanded})}>
+        <div className={classNames(styles.details, { [styles.expanded]: this.state.isExpanded })}>
           { this.renderOptions() }
 
-          <div className={styles.white}>
+          <div className={styles.items}>
             <h3>{isPack ? "Items in pack:" : "DLCs list:"}</h3>
             {!_.isEmpty(items) && items.map(el => (
-              <div className='dlc'>
-                {el.name && <div className='dlcName'>{el.name}</div>}
+              <div className={styles.item}>
+                {el.name && <div>{el.name}</div>}
                 {isPack ?
                   <div>{formatPlaytime(el.playtimeForever)}</div>
                   :
@@ -139,17 +139,19 @@ class Game extends Component {
           ))}
 
             {!isPack &&
-              <>
-                <div>
-                  <input className="dlcInput" placeholder="DLC name" type="text"
-                         onKeyUp={(event) => this.handleDlc(event, data.appId)} ref={this.dlcNameRef}/>
-                </div>
-
-                <div>
-                  <input className="dlcInput" placeholder="DLC price" type="text"
-                         onKeyUp={(event) => this.handleDlc(event, data.appId)} ref={this.dlcPriceRef}/>
-                </div>
-              </>
+              <div className={styles.addDlcWrapper}>
+                <h3>Add DLC</h3>
+                <input
+                  placeholder="DLC name"
+                  type="text"
+                  onKeyUp={(event) => this.handleDlc(event, data.appId)}
+                  ref={this.dlcNameRef}/>
+                <input
+                  placeholder="DLC price"
+                  type="text"
+                  onKeyUp={(event) => this.handleDlc(event, data.appId)}
+                  ref={this.dlcPriceRef}/>
+              </div>
             }
           </div>
         </div>

@@ -53,11 +53,6 @@ body {
   background-color: yellow;
 }
 
-
-.dlcInput {
-  color: black;
-  width: 190px;
-}
 .mainWrapper {
   width: 60%;
   margin: 0 auto;
@@ -96,16 +91,6 @@ body {
 
 .dlcWrapperHidden {
   display: none;
-}
-
-.dlc {
-  display: flex;
-  width: 100%;
-  margin: 2px 0;
-  color: white;
-}
-.dlcName {
-  flex-grow: 1;
 }
 
 .controls {
