@@ -5,15 +5,15 @@ import styles from './Game.module.scss'
 import classNames from 'classnames'
 import * as _ from 'lodash'
 import { Field, Form } from "react-final-form";
+import { Switch } from "@blueprintjs/core";
 
 class Game extends Component {
   constructor(props) {
     super(props);
     this.selectRef = React.createRef();
     this.state = {
-      value: "",
-      hidden: props.data.hidden,
-      isExpanded: false
+      isExpanded: false,
+      isCompleted: props.data.completed,
     }
   }
 
@@ -32,10 +32,9 @@ class Game extends Component {
     }
   };
 
-  hideGame = (appId) => {
-    this.setState({gameClassName: "hide", hidden: true}, () => {
-      axios.patch(`http://steamify-api.61hub.com/v1/games/${appId}`, {hidden: this.state.hidden});
-    });
+  hide = () => {
+    const appId = this.props.data.appId
+    this.props.onChange(appId, {hidden: true})
   };
 
   toggleOptions = () => {
@@ -46,14 +45,20 @@ class Game extends Component {
     e.preventDefault();
     const stringAppid = appId.toString();
     const packId = this.selectRef.current.options[this.selectRef.current.selectedIndex].value;
-    const foundPack = this.props.packages.find((el) => el.packId == packId);
+    const foundPack = this.props.packages.find((el) => el.packId === packId);
 
     axios.patch(`http://steamify-api.61hub.com/v1/packs/${packId}`, {items: [...foundPack.items, appId]})
       .then(() => {
         this.props.onAddedToPack();
-        this.hideGame(appId);
+        this.hide();
       })
   };
+
+  onChangeCompleted = (e) => {
+    this.setState({isCompleted: !this.state.isCompleted}, () => {
+      this.props.onChange(this.props.data.appId, {completed: this.state.isCompleted})
+    })
+  }
 
   renderOptions = () => {
     const { data } = this.props;
@@ -66,15 +71,26 @@ class Game extends Component {
             onSubmit={(...props) => this.props.onPriceChange(data.appId, ...props)}
             render={({ handleSubmit }) => (
               <form onSubmit={handleSubmit}>
-                <Field name="price" initialValue={data.price} component="input" type="text" placeholder="DLC name"/>
+                <Field
+                  name="price"
+                  initialValue={data.price}
+                  component="input"
+                  type="text"
+                  placeholder="DLC name"
+                  // TODO format doesn't work
+                  format={value => parseInt(value, 10)}
+                />
                 <button type="submit">Сохранить</button>
               </form>
             )}
           />
         </div>
         <div className="hideButton">
-          <button onClick={() => this.hideGame(data.appId)}>Hide</button>
+          <button onClick={this.hide}>Hide</button>
         </div>
+
+        <Switch checked={this.state.isCompleted} label="Completed" onChange={this.onChangeCompleted} />
+
         <div className="dropDownPacks">
           {data.type !== 'pack' &&
           <form onSubmit={e => this.patchSubmitedData(data.appId, e)}>
@@ -96,7 +112,7 @@ class Game extends Component {
     const items = isPack ? data.games : data.dlc;
 
     return (
-      <div>
+      <div className={classNames({ [styles.completed]: data.completed })}>
         <div className={classNames(styles.gameWrapper, { [styles.hidden]: hidden })}>
           <div className={styles.gameIcon}>
             <img src={data.logo} alt="Image logo" />
@@ -107,11 +123,13 @@ class Game extends Component {
             <div className="gameMinorInfo">
               <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`} />
               <div className='gameIndex'>#{this.props.index + 1}</div>
-              <div className='gameTotalPrice'>{data.totalPrice}P</div>
+              <div>{data.totalPrice}P</div>
             </div>
           </div>
 
-          <div className="gameDuration">{formatPlaytime(data.playtimeForever)}</div>
+          <div className={styles.gameDuration}>
+            {formatPlaytime(data.playtimeForever)}
+          </div>
         </div>
 
         <div className={classNames(styles.details, { [styles.expanded]: this.state.isExpanded })}>

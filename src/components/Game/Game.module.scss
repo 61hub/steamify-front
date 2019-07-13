@@ -49,3 +49,25 @@
 .addDlcWrapper {
   padding-bottom: 20px;
 }
+
+.gameDuration {
+  font-size: 26px;
+}
+
+@media all and (max-width: 500px) {
+  .gameDuration {
+    font-size: 22px;
+  }
+}
+
+
+.completed {
+
+  .gameDuration {
+    color: #12cc84;
+  }
+
+  .gameWrapper {
+    opacity: 0.5;
+  }
+}
