@@ -74,6 +74,7 @@ class App extends Component {
         <div className="controls">
           <Button className="bp3-minimal" onClick={() => this.setState({ isSettingsOpen: true })}
                   icon="settings"/>
+
           <Button className="bp3-minimal" onClick={() => this.setState({ isStatsOpen: true })}
                   icon="grouped-bar-chart"/>
           <Button className='bp3-minimal' onClick={this.fetchData} icon="refresh"/>

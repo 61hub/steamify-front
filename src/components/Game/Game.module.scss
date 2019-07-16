@@ -52,6 +52,8 @@
 
 .gameDuration {
   font-size: 26px;
+  min-width: 120px;
+  text-align: right;
 }
 
 @media all and (max-width: 500px) {
@@ -70,4 +72,28 @@
   .gameWrapper {
     opacity: 0.5;
   }
+}
+
+//.completedIcon {
+//  svg {
+//    max-height: 20px;
+//    align-self: center;
+//  }
+//  path {
+//    fill: white;
+//  }
+//}
+
+.icons {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin: 10px;
+  }
+}
+
+.infiniteIcon {
+  font-size: 22px;
 }

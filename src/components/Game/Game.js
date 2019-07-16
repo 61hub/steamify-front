@@ -5,7 +5,9 @@ import styles from './Game.module.scss'
 import classNames from 'classnames'
 import * as _ from 'lodash'
 import { Field, Form } from "react-final-form";
-import { Switch } from "@blueprintjs/core";
+import { Icon, Switch } from "@blueprintjs/core";
+import completed from './completed.svg'
+import SVG from 'react-inlinesvg';
 
 class Game extends Component {
   constructor(props) {
@@ -13,7 +15,8 @@ class Game extends Component {
     this.selectRef = React.createRef();
     this.state = {
       isExpanded: false,
-      isCompleted: props.data.completed,
+      completed: props.data.completed,
+      endless: props.data.endless,
     }
   }
 
@@ -54,9 +57,9 @@ class Game extends Component {
       })
   };
 
-  onChangeCompleted = (e) => {
-    this.setState({isCompleted: !this.state.isCompleted}, () => {
-      this.props.onChange(this.props.data.appId, {completed: this.state.isCompleted})
+  onSwitchToggle = key => {
+    this.setState({ [key]: !this.state[key]}, () => {
+      this.props.onChange(this.props.data.appId, { [key]: this.state[key] })
     })
   }
 
@@ -89,7 +92,11 @@ class Game extends Component {
           <button onClick={this.hide}>Hide</button>
         </div>
 
-        <Switch checked={this.state.isCompleted} label="Completed" onChange={this.onChangeCompleted} />
+        <div>
+          <Switch checked={this.state.completed} label="Completed" onChange={() => this.onSwitchToggle('completed')} />
+          <Switch checked={this.state.endless} label="Endless" onChange={() => this.onSwitchToggle('endless')} />
+        </div>
+
 
         <div className="dropDownPacks">
           {data.type !== 'pack' &&
@@ -112,7 +119,8 @@ class Game extends Component {
     const items = isPack ? data.games : data.dlc;
 
     return (
-      <div className={classNames({ [styles.completed]: data.completed })}>
+      /*<div className={classNames({ [styles.completed]: data.completed })}>*/
+      <div>
         <div className={classNames(styles.gameWrapper, { [styles.hidden]: hidden })}>
           <div className={styles.gameIcon}>
             <img src={data.logo} alt="Image logo" />
@@ -127,6 +135,11 @@ class Game extends Component {
             </div>
           </div>
 
+          <div className={styles.icons}>
+            {data.completed && <span>✅</span> }
+            {data.endless && <span className={styles.infiniteIcon}>∞</span>}
+            {!data.completed && !data.endless && <span>⚠️</span>}
+          </div>
           <div className={styles.gameDuration}>
             {formatPlaytime(data.playtimeForever)}
           </div>
