@@ -13,7 +13,7 @@ import Settings from "./components/Settings";
 import { fetchGames, gameUpdate } from "./redux/actions/games";
 import { fetchPacks } from "./redux/actions/packs";
 import PropTypes from 'proptypes'
-import { getComposedGames, getComposedPacks } from "./redux/selectors";
+import { countStatuses, getComposedGames, getComposedPacks, getTotalItems } from "./redux/selectors";
 
 class App extends Component {
   state = {
@@ -67,17 +67,25 @@ class App extends Component {
   };
 
   render() {
-    const { games, packs } = this.props;
+    const { games, packs, items, statuses } = this.props;
 
     return (
       <div className="container">
         <div className="controls">
-          <Button className="bp3-minimal" onClick={() => this.setState({ isSettingsOpen: true })}
+          <Button minimal onClick={() => this.setState({ isSettingsOpen: true })}
                   icon="settings"/>
 
-          <Button className="bp3-minimal" onClick={() => this.setState({ isStatsOpen: true })}
+          <Button minimal onClick={() => this.setState({ isStatsOpen: true })}
                   icon="grouped-bar-chart"/>
-          <Button className='bp3-minimal' onClick={this.fetchData} icon="refresh"/>
+          <Button minimal onClick={this.fetchData} icon="refresh"/>
+          <div className="statuses">
+            <p><span>📖</span><span>{statuses.story}</span></p>
+            <p><span>✅</span><span>{statuses.completed}</span></p>
+            <p><span>∞</span><span>{statuses.endless}</span></p>
+            <p><span>☠️</span><span>{statuses.abandoned}</span></p>
+            <p><span>🕹</span><span>{statuses.playing}</span></p>
+          </div>
+
         </div>
 
         <Settings
@@ -111,8 +119,7 @@ class App extends Component {
         </Drawer>
 
         <div className="mainWrapper">
-
-          {_.orderBy([...packs, ...games], [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
+          {_.orderBy(items, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
             .filter(el => el.status !== 'hidden')
             .map((el, index) =>
               <Game
@@ -150,7 +157,9 @@ App.defaultProps = {
 export default connect(
   (state) => ({
     games: getComposedGames(state),
-    packs: getComposedPacks(state)
+    packs: getComposedPacks(state),
+    items: getTotalItems(state),
+    statuses: countStatuses(state)
   }),
   { fetchGames, fetchPacks, gameUpdate }
 )(App);

@@ -64,6 +64,20 @@ body {
   width: 50%;
 }
 
+.statuses {
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.statuses p {
+  display: grid;
+  grid-template-columns: 28px 20px;
+}
+.statuses span {
+  font-size: 20px;
+}
+
 @media all and (max-width: 500px) {
   .mainWrapper {
     width: 95%;

@@ -47,3 +47,28 @@ export const getComposedGames = createSelector(
     });
   }
 )
+
+export const getTotalItems = createSelector(
+  [getComposedGames, getComposedPacks],
+  (games, packs) => [...games, ...packs]
+)
+
+export const countStatuses = createSelector(
+  [getComposedGames],
+  (games) => {
+    const statuses = {}
+
+    games.forEach(game => {
+      if (game.status) {
+        if (!statuses[game.status]) {
+          statuses[game.status] = 1
+        } else {
+          statuses[game.status] = statuses[game.status] + 1
+        }
+      }
+
+    })
+
+    return statuses
+  }
+)
