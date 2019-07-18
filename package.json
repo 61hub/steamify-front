@@ -5,6 +5,7 @@
   "homepage": "http://steamify.61hub.com",
   "dependencies": {
     "@blueprintjs/core": "^3.15.0",
+    "@blueprintjs/select": "^3.9.0",
     "axios": "^0.18.0",
     "classnames": "2.2.6",
     "date-fns": "^1.30.1",

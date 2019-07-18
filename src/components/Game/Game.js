@@ -5,9 +5,9 @@ import styles from './Game.module.scss'
 import classNames from 'classnames'
 import * as _ from 'lodash'
 import { Field, Form } from "react-final-form";
-import { Icon, Switch } from "@blueprintjs/core";
-import completed from './completed.svg'
-import SVG from 'react-inlinesvg';
+import { GameLogo } from "../GameLogo/GameLogo";
+import { GameDetails } from "../GameDetails/GameDetails";
+import { Switch } from "@blueprintjs/core";
 
 class Game extends Component {
   constructor(props) {
@@ -20,21 +20,6 @@ class Game extends Component {
     }
   }
 
-  definePriceHourClassName = (el) => {
-    let priceHour = countPriceHour(el);
-    if (priceHour <= 10) {
-      return "darkGreen"
-    } else if (priceHour <= 50) {
-      return "green"
-    } else if (priceHour <= 100) {
-      return "yellow"
-    } else if (priceHour <= 200) {
-      return "orange"
-    } else if (priceHour >= 200) {
-      return "red"
-    }
-  };
-
   hide = () => {
     const appId = this.props.data.appId
     this.props.onChange(appId, {hidden: true})
@@ -46,7 +31,6 @@ class Game extends Component {
 
   patchSubmitedData = (appId, e) => {
     e.preventDefault();
-    const stringAppid = appId.toString();
     const packId = this.selectRef.current.options[this.selectRef.current.selectedIndex].value;
     const foundPack = this.props.packages.find((el) => el.packId === packId);
 
@@ -113,36 +97,15 @@ class Game extends Component {
   };
 
   render() {
-    const { data } = this.props;
-    const { hidden } = this.state;
+    const { data, index } = this.props;
     const isPack = data.type === 'pack';
     const items = isPack ? data.games : data.dlc;
 
     return (
-      /*<div className={classNames({ [styles.completed]: data.completed })}>*/
       <div>
-        <div className={classNames(styles.gameWrapper, { [styles.hidden]: hidden })}>
-          <div className={styles.gameIcon}>
-            <img src={data.logo} alt="Image logo" />
-          </div>
-
-          <div className='gameInformation'>
-            <div className="gameName" onClick={this.toggleOptions}>{data.name}</div>
-            <div className="gameMinorInfo">
-              <div className={`gameHourPrice ${this.definePriceHourClassName(data)}`} />
-              <div className='gameIndex'>#{this.props.index + 1}</div>
-              <div>{data.totalPrice}P</div>
-            </div>
-          </div>
-
-          <div className={styles.icons}>
-            {data.completed && <span>✅</span> }
-            {data.endless && <span className={styles.infiniteIcon}>∞</span>}
-            {!data.completed && !data.endless && <span>⚠️</span>}
-          </div>
-          <div className={styles.gameDuration}>
-            {formatPlaytime(data.playtimeForever)}
-          </div>
+        <div className={styles.gameWrapper}>
+          <GameLogo src={data.logo} />
+          <GameDetails data={data} index={index} onTitleClick={this.toggleOptions} />
         </div>
 
         <div className={classNames(styles.details, { [styles.expanded]: this.state.isExpanded })}>

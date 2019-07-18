@@ -30,28 +30,6 @@ body {
 .loadingState.success {
   background-color: green;
 }
-.gameHourPrice {
-  height: 8px;
-  border-radius: 50%;
-  width: 8px;
-  overflow: hidden;
-  margin-right: 8px;
-}
-.gameHourPrice.darkGreen {
-  background-color: darkgreen;
-}
-.gameHourPrice.green {
-  background-color: darkseagreen;
-}
-.gameHourPrice.orange {
-  background-color: orange;
-}
-.gameHourPrice.red {
-  background-color: red;
-}
-.gameHourPrice.yellow {
-  background-color: yellow;
-}
 
 .mainWrapper {
   width: 60%;
@@ -60,26 +38,9 @@ body {
 }
 
 
-.gameInformation {
-  flex-grow: 1;
-  padding-left: 15px;
-}
 
-.gameName {
-  font-size: 20px;
-  margin-bottom: 5px;
-}
 
-.gameMinorInfo {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  color: #586F7C;
-}
 
-.gameIndex {
-  margin-right: 10px;
-}
 
 .dlcWrapper {
   margin: 10px 0;

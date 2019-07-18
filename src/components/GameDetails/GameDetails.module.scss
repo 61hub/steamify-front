@@ -1,0 +1,77 @@
+.gameInformation {
+  flex-grow: 1;
+  padding-left: 15px;
+}
+
+.gameName {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.gameMinorInfo {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #586F7C;
+}
+
+.gameIndex {
+  margin-right: 10px;
+}
+
+.gameHourPrice {
+  height: 8px;
+  border-radius: 50%;
+  width: 8px;
+  overflow: hidden;
+  margin-right: 8px;
+
+  &.darkGreen {
+    background-color: darkgreen;
+  }
+  &.green {
+    background-color: darkseagreen;
+  }
+  &.orange {
+    background-color: orange;
+  }
+  &.red {
+    background-color: red;
+  }
+  &.yellow {
+    background-color: yellow;
+  }
+}
+
+
+.icons {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin: 10px;
+  }
+}
+
+.infiniteIcon {
+  font-size: 18px;
+}
+
+.gameDuration {
+  font-size: 26px;
+  min-width: 120px;
+  text-align: right;
+}
+
+@media all and (max-width: 500px) {
+
+  .gameName {
+    font-size: 16px;
+  }
+
+  .gameDuration {
+    font-size: 22px;
+  }
+}
+
