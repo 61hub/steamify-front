@@ -7,7 +7,6 @@ import * as _ from 'lodash'
 import { Field, Form } from "react-final-form";
 import { GameLogo } from "../GameLogo/GameLogo";
 import { GameDetails } from "../GameDetails/GameDetails";
-import { Switch } from "@blueprintjs/core";
 
 class Game extends Component {
   constructor(props) {
@@ -15,21 +14,14 @@ class Game extends Component {
     this.selectRef = React.createRef();
     this.state = {
       isExpanded: false,
-      completed: props.data.completed,
-      endless: props.data.endless,
     }
   }
-
-  hide = () => {
-    const appId = this.props.data.appId
-    this.props.onChange(appId, {hidden: true})
-  };
 
   toggleOptions = () => {
     this.setState({isExpanded: !this.state.isExpanded})
   };
 
-  patchSubmitedData = (appId, e) => {
+  addToPack = (appId, e) => {
     e.preventDefault();
     const packId = this.selectRef.current.options[this.selectRef.current.selectedIndex].value;
     const foundPack = this.props.packages.find((el) => el.packId === packId);
@@ -37,62 +29,61 @@ class Game extends Component {
     axios.patch(`http://steamify-api.61hub.com/v1/packs/${packId}`, {items: [...foundPack.items, appId]})
       .then(() => {
         this.props.onAddedToPack();
-        this.hide();
+        this.onChange({status: 'hidden'});
       })
   };
 
-  onSwitchToggle = key => {
-    this.setState({ [key]: !this.state[key]}, () => {
-      this.props.onChange(this.props.data.appId, { [key]: this.state[key] })
-    })
+  onChange = (...props) => {
+    const { onChange, data } = this.props
+    this.toggleOptions()
+    return onChange(data.appId, ...props)
   }
 
   renderOptions = () => {
     const { data } = this.props;
+    const statuses = ['default', 'playing', 'completed', 'endless', 'abandoned', 'hidden', 'story']
 
     return (
       <div className={styles.options}>
-        <div>
-          Item price:
-          <Form
-            onSubmit={(...props) => this.props.onPriceChange(data.appId, ...props)}
-            render={({ handleSubmit }) => (
-              <form onSubmit={handleSubmit}>
-                <Field
-                  name="price"
-                  initialValue={data.price}
-                  component="input"
-                  type="text"
-                  placeholder="DLC name"
-                  // TODO format doesn't work
-                  format={value => parseInt(value, 10)}
-                />
-                <button type="submit">Сохранить</button>
-              </form>
-            )}
-          />
-        </div>
-        <div className="hideButton">
-          <button onClick={this.hide}>Hide</button>
-        </div>
+        <Form
+          onSubmit={(...props) => this.onChange(...props)}
+          render={({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              Item price:
+              <Field
+                name="price"
+                initialValue={data.price}
+                component="input"
+                type="text"
+                placeholder="DLC name"
+                // TODO format doesn't work
+                format={value => parseInt(value, 10)}
+              />
+              <br/>
 
-        <div>
-          <Switch checked={this.state.completed} label="Completed" onChange={() => this.onSwitchToggle('completed')} />
-          <Switch checked={this.state.endless} label="Endless" onChange={() => this.onSwitchToggle('endless')} />
-        </div>
+              Status
+              <Field name="status" component="select" initialValue={data.status}>
+                {statuses.map(status => <option value={status}>{status}</option>)}
+              </Field>
+              <br/>
 
+              <button type="submit">Сохранить</button>
+            </form>
+          )}
+        />
 
-        <div className="dropDownPacks">
-          {data.type !== 'pack' &&
-          <form onSubmit={e => this.patchSubmitedData(data.appId, e)}>
-            <select ref={this.selectRef}>
-              {this.props.packages && this.props.packages.map(pack => <option value={pack.packId}>{pack.name}</option>)}
-            </select>
-            <button>Package</button>
-          </form>
-          }
-        </div>
-      </div>
+      {data.type !== 'pack' &&
+        <form onSubmit={e => this.addToPack(data.appId, e)}>
+          <select ref={this.selectRef}>
+            <option value="" />
+            {this.props.packages && this.props.packages.map(pack => (
+              <option value={pack.packId}>{pack.name}</option>
+            ))}
+          </select>
+          <button>Add to Pack</button>
+        </form>
+      }
+    </div>
     )
   };
 

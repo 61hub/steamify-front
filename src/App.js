@@ -113,14 +113,13 @@ class App extends Component {
         <div className="mainWrapper">
 
           {_.orderBy([...packs, ...games], [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
-            .filter(el => !el.hidden)
+            .filter(el => el.status !== 'hidden')
             .map((el, index) =>
               <Game
                 key={el.appId}
                 data={el}
                 index={index}
                 onChange={this.updateItem}
-                onPriceChange={this.updateItem}
                 onAddDlcFormSubmit={this.addDlc}
                 packages={this.props.packs}
                 packId={this.state.packId}

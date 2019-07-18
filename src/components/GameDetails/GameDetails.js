@@ -3,11 +3,11 @@ import styles from "./GameDetails.module.scss";
 import { formatPlaytime, definePriceHourClassName } from "../../helpers";
 import classNames from 'classnames'
 
-export const GameDetails = ({ data, index, onTitleClick }) => (
+export const GameDetails = ({ data: { status, totalPrice, name, ...data } = {}, index, onTitleClick }) => (
   <>
     <div className={styles.gameInformation}>
       <div className={styles.gameName} onClick={onTitleClick}>
-        {data.name}
+        {name}
       </div>
 
       <div className={styles.gameMinorInfo}>
@@ -16,18 +16,19 @@ export const GameDetails = ({ data, index, onTitleClick }) => (
           #{index + 1}
         </div>
         <div>
-          {data.totalPrice}P
+          {totalPrice}P
         </div>
       </div>
     </div>
 
-    <div className={styles.icons}>
-      {data.completed && <span>✅</span> }
-      {data.endless && <span className={styles.infiniteIcon}>∞</span>}
-      {!data.completed && !data.endless && <span>⚠️</span>}
-    </div>
-
     <div className={styles.gameDuration}>
+      <div className={styles.status}>
+        {status === 'completed' && <span>✅</span> }
+        {status === 'endless' && <span className={styles.endless}>∞</span>}
+        {status === 'playing' && <span>🕹</span>}
+        {status === 'abandoned' && <span>☠️</span>}
+        {status === 'story' && <span>📖</span>}
+      </div>
       {formatPlaytime(data.playtimeForever)}
     </div>
   </>
