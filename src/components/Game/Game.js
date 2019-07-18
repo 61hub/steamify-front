@@ -7,6 +7,33 @@ import * as _ from 'lodash'
 import { Field, Form } from "react-final-form";
 import { GameLogo } from "../GameLogo/GameLogo";
 import { GameDetails } from "../GameDetails/GameDetails";
+import { Button, FormGroup, HTMLSelect, InputGroup, NumericInput } from "@blueprintjs/core";
+import { Select } from "@blueprintjs/select";
+
+const CustomField = ({ label, placeholder, helperText = '', input, ...rest}) => (
+  <FormGroup
+    helperText={helperText}
+    label={label}
+    labelFor={`field-${label}`}
+  >
+    <NumericInput
+      id={`field-${label}`}
+      placeholder={placeholder || label}
+      onValueChange={input.onChange}
+      {...input}
+      {...rest}
+    />
+  </FormGroup>
+)
+
+const CustomSelect = ({input, options, ...rest}) => (
+  <FormGroup
+    label="Game Status"
+    labelFor="field-status"
+  >
+    <HTMLSelect options={options} id="field-status" {...input} />
+  </FormGroup>
+)
 
 class Game extends Component {
   constructor(props) {
@@ -49,25 +76,26 @@ class Game extends Component {
           onSubmit={(...props) => this.onChange(...props)}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
-              Item price:
               <Field
                 name="price"
                 initialValue={data.price}
-                component="input"
+                defaultValue={data.price}
+                label="Price"
+                component={CustomField}
                 type="text"
-                placeholder="DLC name"
+                placeholder="Game price"
                 // TODO format doesn't work
                 format={value => parseInt(value, 10)}
               />
-              <br/>
 
-              Status
-              <Field name="status" component="select" initialValue={data.status}>
-                {statuses.map(status => <option value={status}>{status}</option>)}
-              </Field>
-              <br/>
+              <Field
+                name="status"
+                component={CustomSelect}
+                initialValue={data.status}
+                options={statuses}
+              />
 
-              <button type="submit">Сохранить</button>
+              <Button minimal type="submit" icon="tick">Сохранить</Button>
             </form>
           )}
         />
