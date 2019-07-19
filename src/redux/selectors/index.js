@@ -72,3 +72,16 @@ export const countStatuses = createSelector(
     return statuses
   }
 )
+
+export const countTotalPrice = createSelector(
+  [getComposedGames, getComposedPacks],
+  (games, packs) => (
+    [...games, ...packs].reduce((sum, item) => sum + item.totalPrice, 0)
+  )
+)
+export const countTotalTime = createSelector(
+  [getComposedGames, getComposedPacks],
+  (games, packs) => (
+    Math.round([...games, ...packs].reduce((sum, item) => sum + item.playtimeForever, 0) / 60)
+  )
+)

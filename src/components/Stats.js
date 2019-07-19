@@ -1,29 +1,10 @@
 import React from 'react'
-import {formatPlaytime, getTotalPrice} from "../helpers";
+import {formatPlaytime} from "../helpers";
 import Game from "./Game/Game";
 
-export const Stats = ({ games, packs }) => {
-  let price = 0;
-  let playtimeForever = 0;
-
-  games.forEach(game => {
-    if (!game.hidden) {
-      price = price + getTotalPrice(game);
-      playtimeForever = playtimeForever + game.playtimeForever;
-    }
-  });
-
-  packs.forEach(pack => {
-    price = price + pack.price;
-    playtimeForever = playtimeForever + pack.playtimeForever;
-  });
-
+export const Stats = ({ games }) => {
   return (
     <>
-      <div className="stats">
-        <div>{`Total price: ${price}P`}</div>
-        <div>{`Total playtime: ${Math.round(playtimeForever / 60)}hrs`}</div>
-      </div>
       <div className="twoWeeks">
         <h3>Two weeks leaders:</h3>
         {

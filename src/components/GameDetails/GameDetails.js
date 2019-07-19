@@ -2,6 +2,7 @@ import React from 'react'
 import styles from "./GameDetails.module.scss";
 import { formatPlaytime, definePriceHourClassName } from "../../helpers";
 import classNames from 'classnames'
+import { Emoji } from "../Emoji/Emoji";
 
 export const GameDetails = ({ data: { status, totalPrice, name, ...data } = {}, index, onTitleClick }) => (
   <>
@@ -23,11 +24,11 @@ export const GameDetails = ({ data: { status, totalPrice, name, ...data } = {}, 
 
     <div className={styles.gameDuration}>
       <div className={styles.status}>
-        {status === 'completed' && <span>✅</span> }
-        {status === 'endless' && <span className={styles.endless}>∞</span>}
-        {status === 'playing' && <span>🕹</span>}
-        {status === 'abandoned' && <span>☠️</span>}
-        {status === 'story' && <span>📖</span>}
+        {status === 'completed' && <Emoji type="✅" />}
+        {status === 'endless' && <Emoji type="∞" className={styles.endless} />}
+        {status === 'playing' && <Emoji type="🕹" />}
+        {status === 'abandoned' && <Emoji type="☠️" />}
+        {status === 'story' && <Emoji type="📖" />}
       </div>
       {formatPlaytime(data.playtimeForever)}
     </div>

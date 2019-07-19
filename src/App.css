@@ -64,6 +64,10 @@ body {
   width: 50%;
 }
 
+.stats {
+  color: white;
+}
+
 .statuses {
   color: white;
   display: flex;

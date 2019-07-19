@@ -3,7 +3,7 @@ import axios from 'axios'
 import Game from "./components/Game/Game"
 import * as _ from "lodash"
 import { connect } from "react-redux"
-import { Drawer, Position, Classes, Button, RadioGroup, Radio } from '@blueprintjs/core';
+import { Drawer, Position, Classes, Button } from '@blueprintjs/core';
 import "../node_modules/normalize.css/normalize.css";
 import "../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
@@ -13,7 +13,15 @@ import Settings from "./components/Settings";
 import { fetchGames, gameUpdate } from "./redux/actions/games";
 import { fetchPacks } from "./redux/actions/packs";
 import PropTypes from 'proptypes'
-import { countStatuses, getComposedGames, getComposedPacks, getTotalItems } from "./redux/selectors";
+import {
+  countStatuses,
+  countTotalPrice,
+  countTotalTime,
+  getComposedGames,
+  getComposedPacks,
+  getTotalItems
+} from "./redux/selectors";
+import { Emoji } from "./components/Emoji/Emoji";
 
 class App extends Component {
   state = {
@@ -24,13 +32,13 @@ class App extends Component {
     isStatsOpen: false
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.fetchData();
   }
 
-  fetchData = async () => {
-    await this.props.fetchGames();
-    await this.props.fetchPacks();
+  fetchData = () => {
+    this.props.fetchGames();
+    this.props.fetchPacks();
   };
 
   updateItem = (appId, updates) => {
@@ -67,25 +75,43 @@ class App extends Component {
   };
 
   render() {
-    const { games, packs, items, statuses } = this.props;
+    const { items, statuses, totalPrice, totalPlaytime } = this.props;
 
     return (
       <div className="container">
         <div className="controls">
           <Button minimal onClick={() => this.setState({ isSettingsOpen: true })}
                   icon="settings"/>
-
           <Button minimal onClick={() => this.setState({ isStatsOpen: true })}
                   icon="grouped-bar-chart"/>
           <Button minimal onClick={this.fetchData} icon="refresh"/>
-          <div className="statuses">
-            <p><span>📖</span><span>{statuses.story}</span></p>
-            <p><span>✅</span><span>{statuses.completed}</span></p>
-            <p><span>∞</span><span>{statuses.endless}</span></p>
-            <p><span>☠️</span><span>{statuses.abandoned}</span></p>
-            <p><span>🕹</span><span>{statuses.playing}</span></p>
+          <div className="stats">
+            <p>Total price: {totalPrice}P</p>
+            <p>Total playtime: {totalPlaytime}hrs</p>
           </div>
 
+          <div className="statuses">
+            <p>
+              <Emoji type="📖" />
+              <span>{statuses.story}</span>
+            </p>
+            <p>
+              <Emoji type="✅" />
+              <span>{statuses.completed}</span>
+            </p>
+            <p>
+              <Emoji type="∞" />
+              <span>{statuses.endless}</span>
+            </p>
+            <p>
+              <Emoji type="☠️" />
+              <span>{statuses.abandoned}</span>
+            </p>
+            <p>
+              <Emoji type="🕹" />
+              <span>{statuses.playing}</span>
+            </p>
+          </div>
         </div>
 
         <Settings
@@ -123,7 +149,7 @@ class App extends Component {
             .filter(el => el.status !== 'hidden')
             .map((el, index) =>
               <Game
-                key={el.appId}
+                key={el.appId || el.packId}
                 data={el}
                 index={index}
                 onChange={this.updateItem}
@@ -159,7 +185,9 @@ export default connect(
     games: getComposedGames(state),
     packs: getComposedPacks(state),
     items: getTotalItems(state),
-    statuses: countStatuses(state)
+    statuses: countStatuses(state),
+    totalPrice: countTotalPrice(state),
+    totalPlaytime: countTotalTime(state)
   }),
   { fetchGames, fetchPacks, gameUpdate }
 )(App);

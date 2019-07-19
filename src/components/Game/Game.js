@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import {countPriceHour, formatPlaytime, getTotalPrice} from "../../helpers"
+import {formatPlaytime} from "../../helpers"
 import axios from 'axios'
 import styles from './Game.module.scss'
 import classNames from 'classnames'
@@ -7,8 +7,7 @@ import * as _ from 'lodash'
 import { Field, Form } from "react-final-form";
 import { GameLogo } from "../GameLogo/GameLogo";
 import { GameDetails } from "../GameDetails/GameDetails";
-import { Button, FormGroup, HTMLSelect, InputGroup, NumericInput } from "@blueprintjs/core";
-import { Select } from "@blueprintjs/select";
+import { Button, FormGroup, HTMLSelect, NumericInput } from "@blueprintjs/core";
 
 const CustomField = ({ label, placeholder, helperText = '', input, ...rest}) => (
   <FormGroup
@@ -105,7 +104,7 @@ class Game extends Component {
           <select ref={this.selectRef}>
             <option value="" />
             {this.props.packages && this.props.packages.map(pack => (
-              <option value={pack.packId}>{pack.name}</option>
+              <option key={pack.packId} value={pack.packId}>{pack.name}</option>
             ))}
           </select>
           <button>Add to Pack</button>
@@ -134,16 +133,18 @@ class Game extends Component {
             {!_.isEmpty(items) &&
               <>
                 <h3>{isPack ? "Items in pack:" : "DLCs list:"}</h3>
-                {items.map(el => (
-                  <div className={styles.item}>
-                  {el.name && <div>{el.name}</div>}
-                  {isPack ?
-                    <div>{formatPlaytime(el.playtimeForever)}</div>
-                    :
-                    <div>{el.price}</div>
-                  }
+                {
+                  items.map(el => (
+                  <div className={styles.item} key={el.appId || el.name}>
+                    {el.name && <div>{el.name}</div>}
+                    {isPack ?
+                      <div>{formatPlaytime(el.playtimeForever)}</div>
+                      :
+                      <div>{el.price}</div>
+                    }
                   </div>
-                  ))
+                )
+                )
                 }
               </>
             }
