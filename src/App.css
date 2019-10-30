@@ -31,37 +31,12 @@ body {
   background-color: green;
 }
 
-.mainWrapper {
-  width: 60%;
-  margin: 0 auto;
-  padding-top: 25px;
-}
-
-
-
-
-
-
 .dlcWrapper {
   margin: 10px 0;
 }
 
 .dlcWrapperHidden {
   display: none;
-}
-
-.controls {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-}
-
-.controls > * {
-  margin-top: 10px;
-}
-
-.twoWeeks {
-  width: 50%;
 }
 
 .stats {
@@ -83,14 +58,6 @@ body {
 }
 
 @media all and (max-width: 500px) {
-  .mainWrapper {
-    width: 95%;
-  }
-
-  .controls {
-    position: fixed;
-  }
-
   .gameName {
     font-size: 16px;
   }
