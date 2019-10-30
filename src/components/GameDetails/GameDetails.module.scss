@@ -1,6 +1,16 @@
 .gameInformation {
   flex-grow: 1;
   padding-left: 15px;
+
+  &:hover {
+    .pricePerHour {
+      display: block;
+    }
+  }
+}
+
+.pricePerHour {
+  display: none;
 }
 
 .gameName {
@@ -13,10 +23,10 @@
   align-items: center;
   font-size: 14px;
   color: #586F7C;
-}
 
-.gameIndex {
-  margin-right: 10px;
+  &>* {
+    margin-left: 10px;
+  }
 }
 
 .gameHourPrice {
@@ -24,7 +34,6 @@
   border-radius: 50%;
   width: 8px;
   overflow: hidden;
-  margin-right: 8px;
 
   &.darkGreen {
     background-color: darkgreen;

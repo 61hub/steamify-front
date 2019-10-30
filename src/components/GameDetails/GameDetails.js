@@ -3,6 +3,7 @@ import styles from "./GameDetails.module.scss";
 import { formatPlaytime, definePriceHourClassName } from "../../helpers";
 import classNames from 'classnames'
 import { Emoji } from "../Emoji/Emoji";
+import * as _ from 'lodash'
 
 export const GameDetails = ({ data: { status, totalPrice, name, ...data } = {}, index, onTitleClick }) => (
   <>
@@ -14,11 +15,18 @@ export const GameDetails = ({ data: { status, totalPrice, name, ...data } = {}, 
       <div className={styles.gameMinorInfo}>
         <div className={classNames(styles.gameHourPrice, styles[definePriceHourClassName(data)])} />
         <div className={styles.gameIndex}>
-          #{index + 1}
+          {index + 1}.
         </div>
         <div>
           {totalPrice}P
         </div>
+
+        {!_.isNil(data.pricePerHour) &&
+          <div className={styles.pricePerHour}>
+            {data.pricePerHour.toFixed(0)}P/hr
+          </div>
+        }
+
       </div>
     </div>
 

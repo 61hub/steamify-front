@@ -14,7 +14,7 @@ const countPriceHour = (game) => {
     if (itemsTotalTime <= 60) {
       return game.price;
     } else {
-      return Math.round((game.price / itemsTotalTime / 60));
+      return Math.round((game.price / (itemsTotalTime / 60)));
     }
   }
 

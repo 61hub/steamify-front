@@ -7,6 +7,7 @@ const getGames = state => state.games
 export const getComposedPacks = createSelector(
   [getPacks, getGames],
   (packs, games) => {
+
     return packs.map(packData => {
       const pack = {...packData}
 
@@ -24,6 +25,7 @@ export const getComposedPacks = createSelector(
         pack.games.forEach(g => pack.playtimeForever += g.playtimeForever);
         pack.logo = pack.games[Math.floor(Math.random() * (pack.games.length - 1))].logo;
         pack.pricePerHour = countPriceHour(pack);
+        console.log(pack, pack.pricePerHour)
       }
       pack.totalPrice = pack.price
       return pack
