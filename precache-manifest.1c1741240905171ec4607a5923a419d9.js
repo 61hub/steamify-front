@@ -4,12 +4,12 @@ self.__precacheManifest = [
     "url": "/static/media/epic.bda3ae72.png"
   },
   {
-    "revision": "0f0cdf7b5724127032f0",
-    "url": "/static/css/main.f065f963.chunk.css"
+    "revision": "baa8c4f9309f17cff2d9",
+    "url": "/static/css/main.e672ae9c.chunk.css"
   },
   {
-    "revision": "5502b03b7b07c388f20f77fa469a1f47",
-    "url": "/static/media/icons-20.5502b03b.ttf"
+    "revision": "f1bd87971a332ecb21b4ac1d19537fa3",
+    "url": "/static/media/icons-20.f1bd8797.eot"
   },
   {
     "revision": "d0db21ad5f8ebf4e7181",
@@ -32,35 +32,35 @@ self.__precacheManifest = [
     "url": "/static/media/gog.9a9fd63a.png"
   },
   {
-    "revision": "0f0cdf7b5724127032f0",
-    "url": "/static/js/main.0f0cdf7b.chunk.js"
-  },
-  {
-    "revision": "f1bd87971a332ecb21b4ac1d19537fa3",
-    "url": "/static/media/icons-20.f1bd8797.eot"
-  },
-  {
-    "revision": "a82b41082b04f774d82317dff6874d14",
-    "url": "/static/media/icons-16.a82b4108.ttf"
+    "revision": "baa8c4f9309f17cff2d9",
+    "url": "/static/js/main.baa8c4f9.chunk.js"
   },
   {
     "revision": "7f037192fcdef96884010177e90e8c5f",
     "url": "/static/media/icons-16.7f037192.eot"
   },
   {
+    "revision": "422aba8639312ac889d34200226a5c4e",
+    "url": "/static/media/icons-16.422aba86.woff"
+  },
+  {
     "revision": "52f2f35bf3a635ca696e95cc33cf12fa",
     "url": "/static/media/icons-20.52f2f35b.woff"
   },
   {
-    "revision": "422aba8639312ac889d34200226a5c4e",
-    "url": "/static/media/icons-16.422aba86.woff"
+    "revision": "a82b41082b04f774d82317dff6874d14",
+    "url": "/static/media/icons-16.a82b4108.ttf"
+  },
+  {
+    "revision": "5502b03b7b07c388f20f77fa469a1f47",
+    "url": "/static/media/icons-20.5502b03b.ttf"
   },
   {
     "revision": "d0db21ad5f8ebf4e7181",
     "url": "/static/css/1.090da447.chunk.css"
   },
   {
-    "revision": "aeaf402b20fac5c9753baae133f38d29",
+    "revision": "eae1f7f1595270474081b17273821ab6",
     "url": "/index.html"
   }
 ];
