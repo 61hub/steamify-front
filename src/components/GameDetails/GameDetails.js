@@ -4,12 +4,14 @@ import { formatPlaytime, definePriceHourClassName } from "../../helpers";
 import classNames from 'classnames'
 import { Emoji } from "../Emoji/Emoji";
 import * as _ from 'lodash'
+import StoreIcon from "../StoreIcon/StoreIcon";
 
-export const GameDetails = ({ data: { status, totalPrice, name, ...data } = {}, index, onTitleClick }) => (
+export const GameDetails = ({ data: { status, totalPrice, name, store, ...data } = {}, index, onTitleClick }) => (
   <>
     <div className={styles.gameInformation}>
       <div className={styles.gameName} onClick={onTitleClick}>
         {name}
+        <StoreIcon store={store} />
       </div>
 
       <div className={styles.gameMinorInfo}>

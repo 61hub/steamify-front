@@ -50,8 +50,7 @@ class Game extends Component {
   addToPack = (appId, e) => {
     e.preventDefault();
     const packId = this.selectRef.current.options[this.selectRef.current.selectedIndex].value;
-    const foundPack = this.props.packages.find((el) => el.packId === packId);
-
+    const foundPack = this.props.packages.find((el) => el.packId === parseInt(packId, 10));
     axios.patch(`http://steamify-api.61hub.com/v1/packs/${packId}`, {items: [...foundPack.items, appId]})
       .then(() => {
         this.props.onAddedToPack();
@@ -92,6 +91,17 @@ class Game extends Component {
                 component={CustomSelect}
                 initialValue={data.status}
                 options={statuses}
+              />
+
+              <Field
+                name="playtimeForever"
+                initialValue={data.playtimeForever}
+                defaultValue={data.playtimeForever}
+                label="Playtime"
+                component={CustomField}
+                type="text"
+                placeholder="Game playtime"
+                format={value => parseInt(value, 10)}
               />
 
               <Button minimal type="submit" icon="tick">Сохранить</Button>
