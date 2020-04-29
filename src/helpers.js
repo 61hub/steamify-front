@@ -14,7 +14,7 @@ const countPriceHour = (game) => {
     if (itemsTotalTime <= 60) {
       return game.price;
     } else {
-      return Math.round((game.price / itemsTotalTime / 60));
+      return Math.round((game.price / (itemsTotalTime / 60)));
     }
   }
 
@@ -55,5 +55,20 @@ const getTotalPrice = (game) => {
 
   return total;
 };
+
+export const definePriceHourClassName = (el) => {
+  let priceHour = countPriceHour(el);
+  if (priceHour <= 10) {
+    return "darkGreen"
+  } else if (priceHour <= 50) {
+    return "green"
+  } else if (priceHour <= 100) {
+    return "yellow"
+  } else if (priceHour <= 200) {
+    return "orange"
+  } else if (priceHour >= 200) {
+    return "red"
+  }
+}
 
 export { countPriceHour, formatPlaytime, getTotalPrice }

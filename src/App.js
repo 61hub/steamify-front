@@ -3,17 +3,27 @@ import axios from 'axios'
 import Game from "./components/Game/Game"
 import * as _ from "lodash"
 import { connect } from "react-redux"
-import { Drawer, Position, Classes, Button, RadioGroup, Radio } from '@blueprintjs/core';
+import { Drawer, Position, Classes } from '@blueprintjs/core';
 import "../node_modules/normalize.css/normalize.css";
 import "../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
+import 'antd/dist/antd.css';
 import './App.css';
-import { Stats } from "./components/Stats";
+import { Stats } from "./components/Stats/Stats";
 import Settings from "./components/Settings";
 import { fetchGames, gameUpdate } from "./redux/actions/games";
 import { fetchPacks } from "./redux/actions/packs";
 import PropTypes from 'proptypes'
-import { getComposedGames, getComposedPacks } from "./redux/selectors";
+import {
+  countStatuses,
+  countTotalPrice,
+  countTotalTime,
+  getComposedGames,
+  getComposedPacks,
+  getTotalItems
+} from "./redux/selectors";
+import { Emoji } from "./components/Emoji/Emoji";
+import { Affix, Row, Col, Button } from "antd";
 
 class App extends Component {
   state = {
@@ -24,13 +34,13 @@ class App extends Component {
     isStatsOpen: false
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.fetchData();
   }
 
-  fetchData = async () => {
-    await this.props.fetchGames();
-    await this.props.fetchPacks();
+  fetchData = () => {
+    this.props.fetchGames();
+    this.props.fetchPacks();
   };
 
   updateItem = (appId, updates) => {
@@ -38,13 +48,13 @@ class App extends Component {
 
     axios.patch(`http://steamify-api.61hub.com/v1/games/${appId}`, updates)
       .then(response => {
-        this.props.gameUpdate({appId, ...updates});
+        this.props.gameUpdate({ appId, ...updates });
         this.setState({ serverStatus: "success" })
       })
       .catch(response => this.setState({ serverStatus: "error" }));
   };
 
-  addDlc = (appid, {dlcName, dlcPrice}) => {
+  addDlc = (appid, { dlcName, dlcPrice }) => {
     const { games } = this.props;
     const gameToUpdate = games.find(element => element.appId === appid);
 
@@ -67,18 +77,19 @@ class App extends Component {
   };
 
   render() {
-    const { games, packs } = this.props;
+    const { items, statuses, totalPrice, totalPlaytime } = this.props;
 
     return (
-      <div className="container">
-        <div className="controls">
-          <Button className="bp3-minimal" onClick={() => this.setState({ isSettingsOpen: true })}
-                  icon="settings"/>
-          <Button className="bp3-minimal" onClick={() => this.setState({ isStatsOpen: true })}
-                  icon="grouped-bar-chart"/>
-          <Button className='bp3-minimal' onClick={this.fetchData} icon="refresh"/>
-        </div>
-
+      <Row>
+        <Col md={2} sm={24}>
+          <Affix offsetTop={15} style={{marginLeft: 15}}>
+            <Button.Group>
+              <Button type="primary" size="small" onClick={() => this.setState({ isSettingsOpen: true })}
+                      icon="setting"/>
+              <Button type="primary" size="small" onClick={this.fetchData} icon="sync"/>
+            </Button.Group>
+          </Affix>
+        </Col>
         <Settings
           isOpen={this.state.isSettingsOpen}
           onClose={() => this.setState({ isSettingsOpen: false })}
@@ -90,36 +101,15 @@ class App extends Component {
           addPack={this.addPack}
         />
 
-        <Drawer
-          isOpen={this.state.isStatsOpen}
-          onClose={() => this.setState({ isStatsOpen: false })}
-          autoFocus={true}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
-          enforceFocus={true}
-          hasBackdrop={true}
-          position={Position.RIGHT}
-          usePortal={true}
-          size={Drawer.SIZE_LARGE}
-        >
-          <div className={Classes.DRAWER_BODY}>
-            <div className={Classes.DIALOG_BODY}>
-              <Stats games={[...this.props.games]} packs={[...this.props.packs]}/>
-            </div>
-          </div>
-        </Drawer>
-
-        <div className="mainWrapper">
-
-          {_.orderBy([...packs, ...games], [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
-            .filter(el => !el.hidden)
+        <Col sm={24} md={13}>
+          {_.orderBy(items, [this.state.sortedBy, "playtimeForever"], [this.state.sortOrder])
+            .filter(el => el.status !== 'hidden')
             .map((el, index) =>
               <Game
-                key={el.appId}
+                key={el.appId || el.packId}
                 data={el}
                 index={index}
                 onChange={this.updateItem}
-                onPriceChange={this.updateItem}
                 onAddDlcFormSubmit={this.addDlc}
                 packages={this.props.packs}
                 packId={this.state.packId}
@@ -127,8 +117,13 @@ class App extends Component {
                 onAddedToPack={this.fetchData}
               />
             )}
-        </div>
-      </div>
+        </Col>
+        <Col sm={24} md={6} offset={1}>
+          <div offset={15}>
+            <Stats games={items} />
+          </div>
+        </Col>
+      </Row>
 
     );
   }
@@ -150,7 +145,11 @@ App.defaultProps = {
 export default connect(
   (state) => ({
     games: getComposedGames(state),
-    packs: getComposedPacks(state)
+    packs: getComposedPacks(state),
+    items: getTotalItems(state),
+    statuses: countStatuses(state),
+    totalPrice: countTotalPrice(state),
+    totalPlaytime: countTotalTime(state)
   }),
   { fetchGames, fetchPacks, gameUpdate }
 )(App);
