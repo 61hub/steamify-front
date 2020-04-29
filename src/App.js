@@ -88,34 +88,6 @@ class App extends Component {
                       icon="setting"/>
               <Button type="primary" size="small" onClick={this.fetchData} icon="sync"/>
             </Button.Group>
-
-            {/*<div className="stats">*/}
-            {/*  <p>Total price: {totalPrice}P</p>*/}
-            {/*  <p>Total playtime: {totalPlaytime}hrs</p>*/}
-            {/*</div>*/}
-
-            {/*<div className="statuses">*/}
-            {/*  <p>*/}
-            {/*    <Emoji type="📖"/>*/}
-            {/*    <span>{statuses.story}</span>*/}
-            {/*  </p>*/}
-            {/*  <p>*/}
-            {/*    <Emoji type="✅"/>*/}
-            {/*    <span>{statuses.completed}</span>*/}
-            {/*  </p>*/}
-            {/*  <p>*/}
-            {/*    <Emoji type="∞"/>*/}
-            {/*    <span>{statuses.endless}</span>*/}
-            {/*  </p>*/}
-            {/*  <p>*/}
-            {/*    <Emoji type="☠️"/>*/}
-            {/*    <span>{statuses.abandoned}</span>*/}
-            {/*  </p>*/}
-            {/*  <p>*/}
-            {/*    <Emoji type="🕹"/>*/}
-            {/*    <span>{statuses.playing}</span>*/}
-            {/*  </p>*/}
-            {/*</div>*/}
           </Affix>
         </Col>
         <Settings
@@ -147,9 +119,9 @@ class App extends Component {
             )}
         </Col>
         <Col sm={24} md={6} offset={1}>
-          <Affix offset={15}>
-            <Stats games={[...this.props.games]} />
-          </Affix>
+          <div offset={15}>
+            <Stats games={items} />
+          </div>
         </Col>
       </Row>
 
