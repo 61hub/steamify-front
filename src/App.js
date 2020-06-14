@@ -53,26 +53,18 @@ class App extends Component {
   };
 
   async componentWillMount() {
-    // this.fetchData();
-
-      // let games = await player.GetOwnedGames(
-    // userSteamId,
-    //     true,
-    // true,
-    // []
-  // )
-
-    // "http://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=1AD897533C698E617B4F351C640EC53E&format=json&input_json=%7B%22steamId%22%3A%2276561198080321262%22%2C%22include_appinfo%22%3Atrue%2C%22include_played_free_games%22%3Atrue%7D"
-
-    const gamesSnapshots = await db.collection('games').get();
-    gamesSnapshots.forEach(doc => {
-      console.log(doc.id, doc.data())
-    })
+    try {
+      await axios.get('https://us-central1-steamify-61hub.cloudfunctions.net/fetchGames');
+    }
+    catch (e) {
+      console.error(e)
+    }
+    this.fetchData()
   }
 
   fetchData = () => {
     this.props.fetchGames();
-    this.props.fetchPacks();
+    // this.props.fetchPacks();
   };
 
   updateItem = (appId, updates) => {

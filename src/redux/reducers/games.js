@@ -3,7 +3,11 @@ import { gamesActionsTypes } from "../actions/games";
 export const gamesReducer = (state = [], action) => {
   switch (action.type) {
     case gamesActionsTypes.fetchGamesSuccess:
-      return action.games;
+      return action.games.map(game => ({
+        playtimeForever: game.playtime_forever,
+        name: game.name,
+        dlc: []
+      }));
 
     case gamesActionsTypes.gameUpdate:
       return state.map(item => {

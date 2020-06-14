@@ -1,4 +1,4 @@
-import axios from "axios";
+import firebase from "firebase";
 
 export const gamesActionsTypes = {
   fetchGamesSuccess: 'FETCH_GAMES_SUCCESS',
@@ -11,11 +11,19 @@ const fetchGamesSuccess = (games) => ({
 });
 
 export const fetchGames = () => (
-  (dispatch) => (
-    axios
-      .get(`http://steamify-api.61hub.com/v1/games`)
-      .then(response => dispatch(fetchGamesSuccess(response.data)))
-  )
+  async (dispatch) => {
+    const db = firebase.firestore();
+
+    const gamesSnapshots = await db.collection('games').get();
+
+    const games = []
+
+    gamesSnapshots.forEach(doc => {
+      games.push(doc.data())
+    });
+
+    dispatch(fetchGamesSuccess(games));
+  }
 );
 
 export const gameUpdate = (game) => ({
