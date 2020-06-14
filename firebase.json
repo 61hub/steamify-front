@@ -27,5 +27,13 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "emulators": {
+    "firestore": {
+      "port": "3000"
+    },
+    "database": {
+      "port": "3001"
+    }
   }
 }

@@ -25,6 +25,24 @@ import {
 import { Emoji } from "./components/Emoji/Emoji";
 import { Affix, Row, Col, Button } from "antd";
 
+import firebase from "firebase";
+import "firebase/firestore";
+import SteamApi from 'steam-api'
+
+firebase.initializeApp({
+  apiKey: 'AIzaSyD5KmSQcQ1CLDeyfEdnIl7SDCrTwc0GXFQ',
+  authDomain: 'steamify-61hub.firebaseapp.com',
+  projectId: 'steamify-61hub'
+});
+
+const db = firebase.firestore();
+
+const apiKey = '1AD897533C698E617B4F351C640EC53E';
+const userSteamId = '76561198080321262';
+
+// let steamApp = new SteamApi.App(apiKey);
+let player = new SteamApi.Player(apiKey, userSteamId);
+
 class App extends Component {
   state = {
     serverStatus: "",
@@ -34,8 +52,22 @@ class App extends Component {
     isStatsOpen: false
   };
 
-  componentWillMount() {
-    this.fetchData();
+  async componentWillMount() {
+    // this.fetchData();
+
+      // let games = await player.GetOwnedGames(
+    // userSteamId,
+    //     true,
+    // true,
+    // []
+  // )
+
+    // "http://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=1AD897533C698E617B4F351C640EC53E&format=json&input_json=%7B%22steamId%22%3A%2276561198080321262%22%2C%22include_appinfo%22%3Atrue%2C%22include_played_free_games%22%3Atrue%7D"
+
+    const gamesSnapshots = await db.collection('games').get();
+    gamesSnapshots.forEach(doc => {
+      console.log(doc.id, doc.data())
+    })
   }
 
   fetchData = () => {

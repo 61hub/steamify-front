@@ -9,7 +9,6 @@ export const Stats = ({ games }) => {
   const green = games.filter(game => game.pricePerHour > 10 && game.pricePerHour <= 50)
   const greener = games.filter(game => game.pricePerHour < 10)
 
-  console.log(red, games.length / 100)
 
   return (
     <>
