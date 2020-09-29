@@ -18,6 +18,7 @@ exports.fetchGames = functions.https.onRequest(async (req, response) => {
     delete item.playtime_linux_forever
     delete item.playtime_windows_forever
     delete item.has_community_visible_stats
+    delete item.img_icon_url
     item.store = 'steam'
 
     await admin.firestore().collection('games').doc(item.appid.toString()).set(item, {merge: true});

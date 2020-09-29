@@ -132,7 +132,7 @@ class Game extends Component {
     return (
       <div>
         <div className={styles.gameWrapper}>
-          <GameLogo src={data.logo} />
+          <GameLogo src={`http://media.steampowered.com/steamcommunity/public/images/apps/${data.appId}/${data.logo}.jpg`} />
           <GameDetails data={data} index={index} onTitleClick={this.toggleOptions} />
         </div>
 

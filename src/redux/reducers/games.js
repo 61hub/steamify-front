@@ -6,7 +6,12 @@ export const gamesReducer = (state = [], action) => {
       return action.games.map(game => ({
         playtimeForever: game.playtime_forever,
         name: game.name,
-        dlc: []
+        dlc: [],
+        appId: game.appid,
+        store: game.store,
+        isHidden: game.isHidden || false,
+        price: game.price || 0,
+        logo: game.img_logo_url
       }));
 
     case gamesActionsTypes.gameUpdate:

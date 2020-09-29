@@ -54,7 +54,7 @@ class App extends Component {
 
   async componentWillMount() {
     try {
-      await axios.get('https://us-central1-steamify-61hub.cloudfunctions.net/fetchGames');
+      // await axios.get('https://us-central1-steamify-61hub.cloudfunctions.net/fetchGames');
     }
     catch (e) {
       console.error(e)
